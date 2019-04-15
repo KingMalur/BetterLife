@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:better_life/workout.dart';
@@ -11,13 +10,11 @@ import 'package:better_life/database.dart';
 class AddNewWorkoutPage extends StatefulWidget {
   AddNewWorkoutPage({this.cards});
 
-  List<Workout> cards;
+  final List<Workout> cards;
 
   @override
   _AddNewWorkoutPageState createState() => _AddNewWorkoutPageState();
 }
-
-enum GetImageSource {Camera, Gallery, Reset}
 
 class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
   final nameController = TextEditingController();
@@ -30,81 +27,10 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
 
   File _image = new File("");
 
-  Future _getImageSource() async {
-    switch(
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return new SimpleDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          elevation: 5.0,
-          title: AutoSizeText(
-            'Select Image Source',
-            style: TextStyle(
-              fontSize: 25.0,
-            ),
-            maxLines: 1,
-            minFontSize: 20.0,
-          ),
-          children: <Widget>[
-            SimpleDialogOption(
-              child: AutoSizeText(
-                'Camera',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-                maxLines: 1,
-                minFontSize: 15.0,
-              ),
-              onPressed: () {Navigator.pop(context, GetImageSource.Camera);},
-            ),
-            Divider(),
-            SimpleDialogOption(
-              child: AutoSizeText(
-                'Gallery',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-                maxLines: 1,
-                minFontSize: 15.0,
-              ),
-              onPressed: () {Navigator.pop(context, GetImageSource.Gallery);},
-            ),
-            Divider(),
-            SimpleDialogOption(
-              child: AutoSizeText(
-                'Reset Image',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.red,
-                ),
-                maxLines: 1,
-                minFontSize: 15.0,
-              ),
-              onPressed: () {Navigator.pop(context, GetImageSource.Reset);},
-            ),
-          ],
-        );
-      }
-    )
-    )
-    {
-      case GetImageSource.Camera:
-        return GetImageSource.Camera;
-        break;
-      case GetImageSource.Gallery:
-        return GetImageSource.Gallery;
-        break;
-      case GetImageSource.Reset:
-        return GetImageSource.Reset;
-        break;
-    }
-  }
-
   Future getImageFromPickerDialog() async {
     File image;
 
-    var choice = await _getImageSource();
+    var choice = await ImageHelper.getImageSource(context);
 
     if (choice == GetImageSource.Camera) {
       image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -137,7 +63,6 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
       body: SingleChildScrollView(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          //height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -155,27 +80,26 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
   }
 
   Widget get workoutImage {
-    return
-      Container(
-        height: MediaQuery.of(context).size.width / 2.0,
-        width: MediaQuery.of(context).size.width / 2.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Colors.black26,
-          borderRadius: BorderRadiusDirectional.circular(5.0),
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: ImageHelper.getImageProvider(_image == null ? File("") : _image),
-          ),
+    return Container(
+      height: MediaQuery.of(context).size.width / 2.0,
+      width: MediaQuery.of(context).size.width / 2.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        color: Colors.black26,
+        borderRadius: BorderRadiusDirectional.circular(5.0),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: ImageHelper.getImageProvider(_image == null ? File("") : _image),
         ),
-        child: IconButton(
-          icon: Icon(Icons.edit),
-          tooltip: 'Change the photo',
-          alignment: Alignment.bottomRight,
-          color: Colors.white,
-          onPressed: getImageFromPickerDialog,
-        ),
-      );
+      ),
+      child: IconButton(
+        icon: Icon(Icons.edit),
+        tooltip: 'Change the photo',
+        alignment: Alignment.bottomRight,
+        color: Colors.white,
+        onPressed: getImageFromPickerDialog,
+      ),
+    );
   }
 
   Widget get workoutForm {
@@ -266,7 +190,7 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
           RaisedButton(
             onPressed: (() async {
               if (_formKey.currentState.validate()) {
-                Workout w = Workout(nameController.text, setsAmount, repsAmount, weightAmount, useBodyweight, _image == null ? "" : _image.path);
+                Workout w = Workout(nameController.text, setsAmount, repsAmount, useBodyweight ? 0 : weightAmount, useBodyweight, _image == null ? "" : _image.path);
                 bool exists = false;
 
                 for (var e in widget.cards) {
@@ -296,8 +220,7 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
                     }
                   );
                 } else {
-                  int res = await DatabaseProvider.db.insertWorkout(w);
-                  print(res);
+                  await DatabaseProvider.db.insertWorkout(w);
                   widget.cards.add(w);
                   Navigator.of(context).pop();
                 }

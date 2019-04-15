@@ -18,9 +18,9 @@ class Workout {
   int repetitions;
   int weight;
   bool useBodyWeight;
-  String imageFile;
+  String imageFilePath;
 
-  Workout(this.name, this.sets, this.repetitions, this.weight, this.useBodyWeight, this.imageFile);
+  Workout(this.name, this.sets, this.repetitions, this.weight, this.useBodyWeight, this.imageFilePath);
 
   factory Workout.fromMap(Map<String, dynamic> json) {
     bool tmpUseBodyWeight = json['useBodyWeight'] == 0 ? false : true;
@@ -31,7 +31,7 @@ class Workout {
       json['repetitions'],
       json['weight'],
       tmpUseBodyWeight,
-      json['imageFile']
+      json['imageFilePath']
     );
     w.uuid = json['uuid'];
     return w;
@@ -44,6 +44,6 @@ class Workout {
     'repetitions': repetitions,
     'weight': weight,
     'useBodyWeight': useBodyWeight,
-    'imageFile': imageFile,
+    'imageFilePath': imageFilePath,
   };
 }

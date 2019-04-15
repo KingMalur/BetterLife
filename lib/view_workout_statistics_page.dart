@@ -5,7 +5,7 @@ import 'package:better_life/workout.dart';
 class ViewWorkoutStatisticsPage extends StatefulWidget {
   ViewWorkoutStatisticsPage({this.workout});
 
-  Workout workout;
+  final Workout workout;
 
   @override
   _ViewWorkoutStatisticsPageState createState() => _ViewWorkoutStatisticsPageState();
