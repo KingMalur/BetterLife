@@ -10,30 +10,30 @@ class HomePage extends StatefulWidget {
 
   final String title;
 
-  Icon _searchIcon = Icon(Icons.search);
-  Widget _appBarTitle;
   final TextEditingController _filter = new TextEditingController();
-
-  String _searchText = "";
-
-  List<Workout> _workouts = new List<Workout>(); // TODO: Load from database
-  List<Workout> _filteredWorkouts = new List<Workout>();
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  Icon _searchIcon = Icon(Icons.search);
+  Widget _appBarTitle;
+  String _searchText = "";
+
+  List<Workout> _workouts = new List<Workout>();
+  List<Workout> _filteredWorkouts = new List<Workout>();
+
   void _addListenerToSearchFilter() {
     widget._filter.addListener(() {
       if (widget._filter.text.isEmpty) {
         setState(() {
-          widget._searchText = "";
-          widget._filteredWorkouts = widget._workouts;
+          _searchText = "";
+          _filteredWorkouts = _workouts;
         });
       } else {
         setState(() {
-          widget._searchText = widget._filter.text;
+          _searchText = widget._filter.text;
         });
       }
     });
@@ -42,13 +42,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _addListenerToSearchFilter();
-    if (widget._searchIcon.icon == Icons.search) {
-      widget._appBarTitle = Text(widget.title);
+    if (_searchIcon.icon == Icons.search) {
+      _appBarTitle = Text(widget.title);
     }
 
     return Scaffold(
         appBar: AppBar(
-          title: widget._appBarTitle,
+          title: _appBarTitle,
           backgroundColor: Colors.black45,
           actions: <Widget>[
             IconButton(
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           leading: IconButton(
-            icon: widget._searchIcon,
+            icon: _searchIcon,
             tooltip: 'Search for workout',
             onPressed: _searchPressed,
           ),
@@ -97,25 +97,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getWorkoutCardList(AsyncSnapshot snapshot) {
-    widget._workouts = new List<Workout>();
+    _workouts = new List<Workout>();
     for (var e in snapshot.data) {
-      widget._workouts.add(e);
+      _workouts.add(e);
     }
 
-    if (widget._searchText.isNotEmpty) {
+    if (_searchText.isNotEmpty) {
       List<Workout> tempWorkouts = new List<Workout>();
-      for (int i = 0; i < widget._workouts.length; i++) {
-        if (widget._workouts[i].name.toLowerCase().contains(widget._searchText.toLowerCase())) {
-          tempWorkouts.add(widget._workouts[i]);
+      for (int i = 0; i < _workouts.length; i++) {
+        if (_workouts[i].name.toLowerCase().contains(_searchText.toLowerCase())) {
+          tempWorkouts.add(_workouts[i]);
         }
       }
-      widget._filteredWorkouts = tempWorkouts;
+      _filteredWorkouts = tempWorkouts;
     } else {
-      widget._filteredWorkouts = widget._workouts;
+      _filteredWorkouts = _workouts;
     }
 
 
-    WorkoutCardList l = WorkoutCardList(workoutList: widget._filteredWorkouts,);
+    WorkoutCardList l = WorkoutCardList(workoutList: _filteredWorkouts,);
     l.workoutList.sort((a, b) => a.name.compareTo(b.name)); // Sort by name
 
     return l;
@@ -123,9 +123,9 @@ class _HomePageState extends State<HomePage> {
 
   void _searchPressed() {
     setState(() {
-      if (widget._searchIcon.icon == Icons.search) {
-        widget._searchIcon = Icon(Icons.close);
-        widget._appBarTitle = TextField(
+      if (_searchIcon.icon == Icons.search) {
+        _searchIcon = Icon(Icons.close);
+        _appBarTitle = TextField(
           controller: widget._filter,
           style: TextStyle(
             color: Colors.white70,
@@ -137,16 +137,16 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       } else {
-        widget._searchIcon = Icon(Icons.search);
-        widget._appBarTitle = Text(widget.title);
-        widget._filteredWorkouts = widget._workouts;
+        _searchIcon = Icon(Icons.search);
+        _appBarTitle = Text(widget.title);
+        _filteredWorkouts = _workouts;
         widget._filter.clear();
       }
     });
   }
 
   void _addPressed() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewWorkoutPage(cards: widget._workouts,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewWorkoutPage(cards: _workouts,)));
   }
 
   void _menuPressed() {

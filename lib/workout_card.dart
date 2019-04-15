@@ -65,7 +65,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
         borderRadius: BorderRadiusDirectional.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: ImageHelper.getImageProvider(File(widget.workout.imageFile)),//FileImage(File(widget.workout.imagePath)),
+          image: ImageHelper.getImageProvider(File(widget.workout.imageFilePath)),//FileImage(File(widget.workout.imagePath)),
         ),
       ),
     );
@@ -89,7 +89,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
             color: Colors.black45,
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                  ModifyWorkoutPage(workout: widget.workout,)));
+                  ModifyWorkoutPage(workout: widget.workout)));
             },
           ),
           IconButton(

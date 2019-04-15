@@ -48,12 +48,12 @@ class HorizontalSlider extends StatelessWidget {
 
   final int minValue;
   final int maxValue;
-  int value;
+  final int value;
   final ValueChanged<int> onChanged;
   final double width;
   final ScrollController scrollController;
-
   double get itemExtent => width / 3;
+
   int _indexToValue(int index) => (minValue + (index - 1));
 
   @override
@@ -108,7 +108,7 @@ class HorizontalSlider extends StatelessWidget {
   bool _userStoppedScrolling(Notification notification) {
     return notification is UserScrollNotification &&
         notification.direction == ScrollDirection.idle &&
-        scrollController.position.activity is! HoldScrollActivity;
+        scrollController.position.activity is! HoldScrollActivity; // TODO: Fix error "Use of protected member"
   }
 
   void _animateTo(int valueToSelect, {int durationMilliseconds = 200}) {

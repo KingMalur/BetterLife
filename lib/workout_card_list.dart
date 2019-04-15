@@ -4,7 +4,7 @@ import 'package:better_life/workout.dart';
 import 'package:better_life/workout_card.dart';
 
 class WorkoutCardList extends StatefulWidget {
-  List<Workout> workoutList;
+  final List<Workout> workoutList;
 
   WorkoutCardList({this.workoutList});
 
