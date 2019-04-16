@@ -28,26 +28,32 @@ class DatabaseProvider {
     var documentsInDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsInDirectory.path, databaseName);
     return await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE " + workoutTableName + " ("
-          "uuid TEXT PRIMARY KEY, "
-          "name TEXT, "
-          "sets INTEGER, "
-          "repetitions INTEGER, "
-          "weight INTEGER, "
-          "useBodyWeight INTEGER, "
-          "imageFilePath TEXT"
-          ")"
-      );
-      await db.execute("CREATE TABLE " + workoutDataTableName + " ("
-          "uuid TEXT PRIMARY KEY, "
-          "workoutUuid TEXT, "
-          "dateTimeIso8601 TEXT, "
-          "sets INTEGER, "
-          "repetitions INTEGER, "
-          "weight INTEGER"
-          ")"
-      );
+      await _createTablesIfExist(db);
+    }, onOpen: (Database db) async {
+      await _createTablesIfExist(db);
     });
+  }
+
+  _createTablesIfExist(Database db) async {
+    await db.execute("CREATE TABLE IF NOT EXISTS " + workoutTableName + " ("
+        "uuid TEXT PRIMARY KEY, "
+        "name TEXT, "
+        "sets INTEGER, "
+        "repetitions INTEGER, "
+        "weight INTEGER, "
+        "useBodyWeight INTEGER, "
+        "imageFilePath TEXT"
+        ")"
+    );
+    await db.execute("CREATE TABLE IF NOT EXISTS " + workoutDataTableName + " ("
+        "uuid TEXT PRIMARY KEY, "
+        "workoutUuid TEXT, "
+        "dateTimeIso8601 TEXT, "
+        "sets INTEGER, "
+        "repetitions INTEGER, "
+        "weight INTEGER"
+        ")"
+    );
   }
 
   // WORKOUT DATA
@@ -103,7 +109,7 @@ class DatabaseProvider {
   Future<List<WorkoutData>> getWorkoutDataPointsOfWorkout(String workoutUuid) async {
     final db = await database;
 
-    var res = await db.query(workoutDataTableName, where: "workoutUuid = ?", whereArgs: workoutUuid); // Future<List<Map<String, dynamic>>>
+    var res = await db.query(workoutDataTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]); // Future<List<Map<String, dynamic>>>
 
     List<WorkoutData> listOfWorkoutDataPoints = new List<WorkoutData>();
 
@@ -125,6 +131,7 @@ class DatabaseProvider {
 
     await db.delete(workoutDataTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
   }
+  // END WORKOUT DATA
 
   // WORKOUT
   insertWorkout(Workout workout) async {
@@ -184,4 +191,5 @@ class DatabaseProvider {
       await deleteWorkoutDataOfWorkout(workout.uuid);
     }
   }
+  // END WORKOUT
 }

@@ -61,10 +61,8 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              workoutImage,
-              Divider(),
               AutoSizeText(
-                workoutName,
+                widget.workout.name,
                 style: TextStyle(
                   fontSize: 25.0,
                 ),
@@ -72,8 +70,10 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
                 minFontSize: 15.0,
               ),
               Divider(),
+              workoutImage,
+              Divider(),
               workoutDataForm,
-              //Divider(),
+              Divider(),
             ],
           ),
         ),
@@ -83,8 +83,8 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
 
   Widget get workoutImage {
     return Container(
-      height: MediaQuery.of(context).size.width / 2.0,
-      width: MediaQuery.of(context).size.width / 2.0,
+      height: MediaQuery.of(context).size.width / 3.0,
+      width: MediaQuery.of(context).size.width / 3.0,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.black26,
