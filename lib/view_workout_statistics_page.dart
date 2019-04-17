@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 import 'package:better_life/workout.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:better_life/image_helper.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:better_life/database.dart';
 import 'package:better_life/workout_data.dart';
 import 'package:better_life/workout_data_point.dart';
+import 'package:better_life/add_new_workout_data_page.dart';
+import 'package:better_life/alert_yes_no.dart';
+import 'package:better_life/edit_workout_data_page.dart';
 
 class ViewWorkoutStatisticsPage extends StatefulWidget {
   ViewWorkoutStatisticsPage({this.workout});
@@ -19,15 +20,16 @@ class ViewWorkoutStatisticsPage extends StatefulWidget {
 }
 
 class _ViewWorkoutStatisticsPageState extends State<ViewWorkoutStatisticsPage> {
-  File _image = new File("");
+  List<DropdownMenuItem<int>> _timeSpanItems;
+  int _currentTimeSpan;
 
   @override
   initState() {
     super.initState();
 
+    _timeSpanItems = _getTimeSpanItems();
     setState(() {
-      _image = widget.workout.imageFilePath.isEmpty ? File("") : File(
-          widget.workout.imageFilePath);
+      _currentTimeSpan = 0;
     });
   }
 
@@ -65,7 +67,33 @@ class _ViewWorkoutStatisticsPageState extends State<ViewWorkoutStatisticsPage> {
                 ) : Container(),
               Divider(),
               workoutDiagram,
-              //Divider(),
+              Divider(),
+              DropdownButton(
+                onChanged: _updateTimeSpan,
+                items: _timeSpanItems,
+                value: _currentTimeSpan,
+                hint: Text('Select Timespan of Diagram'),
+              ),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.delete,),
+                    color: Colors.black45,
+                    onPressed: deleteAllWorkoutData,
+                  ),
+                  VerticalDivider(),
+                  IconButton(
+                    icon: Icon(Icons.add,),
+                    color: Colors.black45,
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          AddNewWorkoutDataPage(workout: widget.workout,)));
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -73,29 +101,28 @@ class _ViewWorkoutStatisticsPageState extends State<ViewWorkoutStatisticsPage> {
     );
   }
 
-  Widget get workoutImage {
-    return Container(
-      height: MediaQuery.of(context).size.width / 4.0,
-      width: MediaQuery.of(context).size.width / 4.0,
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: Colors.black26,
-        borderRadius: BorderRadiusDirectional.circular(5.0),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: ImageHelper.getImageProvider(_image == null ? File("") : _image),
-        ),
-      ),
-    );
+  List<DropdownMenuItem<int>> _getTimeSpanItems() {
+    return [
+      new DropdownMenuItem(child: Text('3 Months'), value: 3,),
+      new DropdownMenuItem(child: Text('6 Months'), value: 6,),
+      new DropdownMenuItem(child: Text('12 Months'), value: 12,),
+      new DropdownMenuItem(child: Text('All Time'), value: 0,),
+    ];
+  }
+
+  _updateTimeSpan(int selectedTimeSpan) {
+    setState(() {
+      _currentTimeSpan = selectedTimeSpan;
+    });
   }
 
   Widget get workoutDiagram {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 2.75,
       padding: EdgeInsets.all(8.0),
-      child: new FutureBuilder(//_buildWorkoutCardList(widget._workouts),
-      future: DatabaseProvider.db.getWorkoutDataPointsOfWorkout(widget.workout.uuid),
+      child: new FutureBuilder(
+      future: DatabaseProvider.db.getWorkoutDataPointsOfWorkout(widget.workout.uuid, excludeOlderThanTimeSpan: true, notOlderThanDays: _currentTimeSpan * 30.0), // For approximately months * days per month
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != null) {
@@ -130,7 +157,8 @@ class _ViewWorkoutStatisticsPageState extends State<ViewWorkoutStatisticsPage> {
 
     return new charts.TimeSeriesChart(
       _dataSeries,
-      animate: false,
+      animate: true,
+      animationDuration: Duration(milliseconds: 200),
       defaultInteractions: false,
       defaultRenderer: new charts.LineRendererConfig(),
       dateTimeFactory: const charts.LocalDateTimeFactory(),
@@ -196,42 +224,28 @@ class _ViewWorkoutStatisticsPageState extends State<ViewWorkoutStatisticsPage> {
     return l;
   }
 
-  _onSelectionChanged(charts.SelectionModel model) async {
+  _onSelectionChanged(charts.SelectionModel model) {
     if (model.hasDatumSelection) {
       var d = model.selectedDatum[0];
-      String id = d.datum.uuid;
 
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-        return new AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          elevation: 5.0,
-          title: AutoSizeText(
-            'Success',
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-            maxLines: 1,
-            minFontSize: 15.0,
-          ),
-          content: AutoSizeText(
-            'The selected Workout-Data is: ' + d.datum.uuid + '\nDate: ' + d.datum.dateTime.toIso8601String() + '\nSets: ' + d.datum.sets.toString() + '\nReps: ' + d.datum.repetitions.toString() + '\nWeight: ' + d.datum.weight.toString(),
-            style: TextStyle(
-              fontSize: 15.0,
-            ),
-            maxLines: 10,
-            minFontSize: 10.0,
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Close'),
-            ),
-          ],
-        );
-      }
-    );
+      var w = WorkoutData(widget.workout.uuid, d.datum.dateTime.toIso8601String(), d.datum.sets, d.datum.repetitions, d.datum.weight);
+      w.uuid = d.datum.uuid;
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          EditWorkoutDataPage(workout: widget.workout, workoutData: w)));
+    }
+  }
+
+  deleteAllWorkoutData() async {
+    switch(
+      await CustomAlertDialog.showYesNoAlert('You will loose all progress of this Workout!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+    )
+    {
+      case AlertReturnDecide.Yes:
+        await DatabaseProvider.db.deleteWorkoutDataOfWorkout(widget.workout.uuid);
+        setState(() {}); // Rebuild the Widgets
+        break;
+      case AlertReturnDecide.No: // Stay here, do nothing
+        break;
     }
   }
 }

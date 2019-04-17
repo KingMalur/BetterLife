@@ -106,7 +106,7 @@ class DatabaseProvider {
     return listOfWorkoutDataPoints; // Future<List<Workout>> -> For FutureBuilder
   }
 
-  Future<List<WorkoutData>> getWorkoutDataPointsOfWorkout(String workoutUuid) async {
+  Future<List<WorkoutData>> getWorkoutDataPointsOfWorkout(String workoutUuid, {bool sort = true, bool excludeOlderThanTimeSpan = false, double notOlderThanDays = double.infinity}) async {
     final db = await database;
 
     var res = await db.query(workoutDataTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]); // Future<List<Map<String, dynamic>>>
@@ -117,13 +117,52 @@ class DatabaseProvider {
       listOfWorkoutDataPoints.add(WorkoutData.fromMap(e)); // Workout
     }
 
-    return listOfWorkoutDataPoints; // Future<List<Workout>> -> For FutureBuilder
+    List<WorkoutData> listOfNonExcludedWorkoutDataPoints = new List<WorkoutData>();
+
+    DateTime nDaysAgo = DateTime.now().subtract(Duration(days: notOlderThanDays.round()));
+    if (excludeOlderThanTimeSpan) {
+      for (var e in listOfWorkoutDataPoints) {
+        if (notOlderThanDays == 0.0) {
+          listOfNonExcludedWorkoutDataPoints.add(e);
+        } else {
+          if (nDaysAgo.compareTo(DateTime.parse(e.dateTimeIso8601)) <= 0) {
+            listOfNonExcludedWorkoutDataPoints.add(e);
+          }
+        }
+      }
+    } else {
+      listOfNonExcludedWorkoutDataPoints = listOfWorkoutDataPoints;
+    }
+
+    if (sort) {
+      listOfNonExcludedWorkoutDataPoints.sort((a, b) => DateTime.parse(a.dateTimeIso8601).compareTo(DateTime.parse(b.dateTimeIso8601)));
+    }
+
+    return listOfNonExcludedWorkoutDataPoints; // Future<List<Workout>> -> For FutureBuilder
   }
 
-  deleteWorkoutData(WorkoutData data) async {
+  Future<WorkoutData> getLatestWorkoutDataPointOfWorkout(String workoutUuid) async {
     final db = await database;
 
-    await db.delete(workoutDataTableName, where: "uuid = ?", whereArgs: [data.uuid]);
+    var res = await db.query(workoutDataTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]); // Future<List<Map<String, dynamic>>>
+
+    List<WorkoutData> listOfWorkoutDataPoints = new List<WorkoutData>();
+
+    for (var e in res.toList()) { // For Map<String, dynamic>
+      listOfWorkoutDataPoints.add(WorkoutData.fromMap(e)); // Workout
+    }
+
+    listOfWorkoutDataPoints.sort((a, b) => DateTime.parse(a.dateTimeIso8601).compareTo(DateTime.parse(b.dateTimeIso8601)));
+
+    var latestWorkoutData = listOfWorkoutDataPoints.isEmpty ? null : listOfWorkoutDataPoints.last;
+
+    return latestWorkoutData; // Future<List<Workout>> -> For FutureBuilder
+  }
+
+  deleteSingleWorkoutData(String uuid) async {
+    final db = await database;
+
+    await db.delete(workoutDataTableName, where: "uuid = ?", whereArgs: [uuid]);
   }
 
   deleteWorkoutDataOfWorkout(String workoutUuid) async {

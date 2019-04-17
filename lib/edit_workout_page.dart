@@ -1,31 +1,47 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:better_life/workout.dart';
 import 'package:better_life/image_helper.dart';
 import 'package:better_life/horizontal_number_picker.dart';
 import 'package:better_life/database.dart';
+import 'package:better_life/alert_yes_no.dart';
 
-class AddNewWorkoutPage extends StatefulWidget {
-  AddNewWorkoutPage({this.cards});
+class ModifyWorkoutPage extends StatefulWidget {
+  ModifyWorkoutPage({this.workout});
 
-  final List<Workout> cards;
+  final Workout workout;
 
   @override
-  _AddNewWorkoutPageState createState() => _AddNewWorkoutPageState();
+  _ModifyWorkoutPageState createState() => _ModifyWorkoutPageState();
 }
 
-class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
+class _ModifyWorkoutPageState extends State<ModifyWorkoutPage> {
   final nameController = TextEditingController();
-  int setsAmount = 3;
-  int repsAmount = 8;
-  int weightAmount = 20;
-  bool useBodyweight = false;
+  int setsAmount;
+  int repsAmount;
+  int weightAmount;
+  bool useBodyweight;
 
   final _formKey = GlobalKey<FormState>();
 
   File _image = new File("");
+
+  @override
+  initState() {
+    super.initState();
+
+    setState(() {
+      setsAmount = widget.workout.sets;
+      repsAmount = widget.workout.repetitions;
+      weightAmount = widget.workout.weight;
+      useBodyweight = widget.workout.useBodyWeight;
+      nameController.text = widget.workout.name;
+      _image = widget.workout.imageFilePath.isEmpty ? File("") : File(widget.workout.imageFilePath);
+    });
+  }
 
   Future getImageFromPickerDialog() async {
     File image;
@@ -58,7 +74,7 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black45,
-        title: Text('Add new Workout',),
+        title: Text('Edit Workout',),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -181,49 +197,87 @@ class _AddNewWorkoutPageState extends State<AddNewWorkoutPage> {
             ],
           ),
           Divider(),
-          RaisedButton(
-            onPressed: (() async {
-              if (_formKey.currentState.validate()) {
-                Workout w = Workout(nameController.text, setsAmount, repsAmount, useBodyweight ? 0 : weightAmount, useBodyweight, _image == null ? "" : _image.path);
-                bool exists = false;
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: (() async {
+                  if (_formKey.currentState.validate()) {
+                    Workout w = Workout(nameController.text, setsAmount, repsAmount, weightAmount, useBodyweight, _image == null ? "" : _image.path);
+                    w.uuid = widget.workout.uuid;
 
-                for (var e in widget.cards) {
-                  if (e.name == w.name) {
-                    exists = true;
-                    break;
+                    await DatabaseProvider.db.updateWorkout(w);
+                    Navigator.of(context).pop();
                   }
-                }
+                }),
+                child: Text('Save Workout'),
+              ),
+              VerticalDivider(),
+              RaisedButton(
+                onPressed: (() async {
+                  if (_formKey.currentState.validate()) {
+                    Workout w = Workout(nameController.text, setsAmount, repsAmount, weightAmount, useBodyweight, _image == null ? "" : _image.path);
+                    w.uuid = widget.workout.uuid;
 
-                if (exists) {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return new AlertDialog(
-                        elevation: 5.0,
-                        title: Text('Error saving Workout'),
-                        content: Text('A Workout of name ' + w.name + ' already exists.'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Close'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
+                    switch(
+                      await CustomAlertDialog.showYesNoAlert('You will loose this Workout!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                    )
+                    {
+                      case AlertReturnDecide.Yes:
+                        await DatabaseProvider.db.deleteWorkout(w, deleteWorkoutDataPoints: true);
+                        await _showDeleteSuccess();
+                        Navigator.of(context).pop();
+                        break;
+                      case AlertReturnDecide.No: // Stay here, do nothing
+                        break;
                     }
-                  );
-                } else {
-                  await DatabaseProvider.db.insertWorkout(w);
-                  widget.cards.add(w);
-                  Navigator.of(context).pop();
-                }
-              }
-            }),
-            child: Text('Save Workout'),
+                  }
+                }),
+                child: Text(
+                  'Delete Workout',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  _showDeleteSuccess() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 5.0,
+          title: AutoSizeText(
+            'Success',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+            maxLines: 1,
+            minFontSize: 15.0,
+          ),
+          content: AutoSizeText(
+            'The Workout and all its data was deleted.',
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+            maxLines: 3,
+            minFontSize: 15.0,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      }
     );
   }
 }
