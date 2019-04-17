@@ -44,21 +44,6 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
       workoutName = widget.workout.name;
       _image = widget.workout.imageFilePath.isEmpty ? File("") : File(widget.workout.imageFilePath);
     });
-
-    FutureBuilder(
-      future: _awaitLatestWorkoutData(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data != null) {
-            setState(() {
-              setsAmount = snapshot.data.sets;
-              repsAmount = snapshot.data.repetitions;
-              weightAmount = snapshot.data.weight;
-            });
-          }
-        }
-      },
-    );
   }
 
   Future<WorkoutData> _awaitLatestWorkoutData() async {
@@ -92,7 +77,6 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
               workoutImage,
               Divider(),
               workoutDataForm,
-              Divider(),
             ],
           ),
         ),
@@ -117,7 +101,7 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
   }
 
   Widget get workoutDataForm {
-    return Form(
+    return new Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,7 +113,7 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
             editable: false,
             decoration: InputDecoration(
               labelText: 'Date/Time',
-                hasFloatingPlaceholder: false,
+              hasFloatingPlaceholder: false,
             ),
             initialValue: _date,
             onChanged: (dt) => setState(() => _date = dt),
@@ -188,6 +172,10 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
               if (_formKey.currentState.validate()) {
                 WorkoutData data = WorkoutData(widget.workout.uuid, _date.toIso8601String(), setsAmount, repsAmount, weightAmount);
                 await DatabaseProvider.db.insertWorkoutData(data);
+                widget.workout.sets = setsAmount;
+                widget.workout.repetitions = repsAmount;
+                widget.workout.weight = weightAmount;
+                await DatabaseProvider.db.updateWorkout(widget.workout);
                 Navigator.of(context).pop();
               }
             }),
