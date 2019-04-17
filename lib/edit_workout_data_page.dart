@@ -9,17 +9,19 @@ import 'package:better_life/image_helper.dart';
 import 'package:better_life/horizontal_number_picker.dart';
 import 'package:better_life/database.dart';
 import 'package:better_life/workout_data.dart';
+import 'package:better_life/alert_yes_no.dart';
 
-class AddNewWorkoutDataPage extends StatefulWidget {
-  AddNewWorkoutDataPage({this.workout});
+class EditWorkoutDataPage extends StatefulWidget {
+  EditWorkoutDataPage({this.workout, this.workoutData});
 
   final Workout workout;
+  final WorkoutData workoutData;
 
   @override
-  _AddNewWorkoutDataPageState createState() => _AddNewWorkoutDataPageState();
+  _EditWorkoutDataPageState createState() => _EditWorkoutDataPageState();
 }
 
-class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
+class _EditWorkoutDataPageState extends State<EditWorkoutDataPage> {
   int setsAmount;
   int repsAmount;
   int weightAmount;
@@ -37,32 +39,14 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
     super.initState();
 
     setState(() {
-      setsAmount = widget.workout.sets;
-      repsAmount = widget.workout.repetitions;
-      weightAmount = widget.workout.weight;
+      setsAmount = widget.workoutData.sets;
+      repsAmount = widget.workoutData.repetitions;
+      weightAmount = widget.workoutData.weight;
       useBodyweight = widget.workout.useBodyWeight;
       workoutName = widget.workout.name;
       _image = widget.workout.imageFilePath.isEmpty ? File("") : File(widget.workout.imageFilePath);
+      _date = DateTime.parse(widget.workoutData.dateTimeIso8601);
     });
-
-    FutureBuilder(
-      future: _awaitLatestWorkoutData(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data != null) {
-            setState(() {
-              setsAmount = snapshot.data.sets;
-              repsAmount = snapshot.data.repetitions;
-              weightAmount = snapshot.data.weight;
-            });
-          }
-        }
-      },
-    );
-  }
-
-  Future<WorkoutData> _awaitLatestWorkoutData() async {
-    return await DatabaseProvider.db.getLatestWorkoutDataPointOfWorkout(widget.workout.uuid);
   }
 
   @override
@@ -70,7 +54,7 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black45,
-        title: Text('Add new Workout-Data',),
+        title: Text('Edit Workout-Data',),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -92,7 +76,6 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
               workoutImage,
               Divider(),
               workoutDataForm,
-              Divider(),
             ],
           ),
         ),
@@ -129,7 +112,7 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
             editable: false,
             decoration: InputDecoration(
               labelText: 'Date/Time',
-                hasFloatingPlaceholder: false,
+              hasFloatingPlaceholder: false,
             ),
             initialValue: _date,
             onChanged: (dt) => setState(() => _date = dt),
@@ -183,15 +166,47 @@ class _AddNewWorkoutDataPageState extends State<AddNewWorkoutDataPage> {
             ],
           ),
           Divider(),
-          RaisedButton(
-            onPressed: (() async {
-              if (_formKey.currentState.validate()) {
-                WorkoutData data = WorkoutData(widget.workout.uuid, _date.toIso8601String(), setsAmount, repsAmount, weightAmount);
-                await DatabaseProvider.db.insertWorkoutData(data);
-                Navigator.of(context).pop();
-              }
-            }),
-            child: Text('Save Workout-Data'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: (() async {
+                  if (_formKey.currentState.validate()) {
+                    widget.workoutData.dateTimeIso8601 = _date.toIso8601String();
+                    widget.workoutData.sets = setsAmount;
+                    widget.workoutData.repetitions = repsAmount;
+                    widget.workoutData.weight = weightAmount;
+                    await DatabaseProvider.db.updateWorkoutData(widget.workoutData);
+                    Navigator.of(context).pop();
+                  }
+                }),
+                child: Text('Save Workout-Data'),
+              ),
+              VerticalDivider(),
+              RaisedButton(
+                onPressed: (() async {
+                  if (_formKey.currentState.validate()) {
+                    switch(
+                    await CustomAlertDialog.showYesNoAlert('You will loose this Workout-Data!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                    )
+                    {
+                      case AlertReturnDecide.Yes:
+                        await DatabaseProvider.db.deleteSingleWorkoutData(widget.workoutData.uuid);
+                        Navigator.of(context).pop();
+                        break;
+                      case AlertReturnDecide.No: // Stay here, do nothing
+                        break;
+                    }
+                  }
+                }),
+                child: Text(
+                  'Delete Workout-Data',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

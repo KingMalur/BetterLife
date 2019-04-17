@@ -36,8 +36,8 @@ class HorizontalNumberPicker extends StatelessWidget {
 class HorizontalSlider extends StatelessWidget {
   HorizontalSlider({
     Key key,
-    @required this.minValue,
-    @required this.maxValue,
+    this.minValue = 1,
+    this.maxValue = 999,
     @required this.width,
     @required this.value,
     @required this.onChanged,
@@ -59,6 +59,7 @@ class HorizontalSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int itemCount = (maxValue - minValue) + 3;
+
     return NotificationListener(
       onNotification: _onNotification,
       child: ListView.builder(
