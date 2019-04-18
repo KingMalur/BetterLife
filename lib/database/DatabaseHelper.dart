@@ -88,7 +88,7 @@ class DatabaseHelper {
         "colorR INTEGER NOT NULL, "
         "colorG INTEGER NOT NULL, "
         "colorB INTEGER NOT NULL, "
-        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid),"
+        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid)"
         ")"
     );
   }

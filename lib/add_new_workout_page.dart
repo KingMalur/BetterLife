@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:better_life/workout.dart';
-import 'package:better_life/image_helper.dart';
-import 'package:better_life/horizontal_number_picker.dart';
-import 'package:better_life/database.dart';
+import 'package:better_life/MIGRATED_workout.dart';
+import 'package:better_life/MIGRATED_image_helper.dart';
+import 'package:better_life/MIGRATED_horizontal_number_picker.dart';
+import 'package:better_life/MIGRATED_database.dart';
 
 class AddNewWorkoutPage extends StatefulWidget {
   AddNewWorkoutPage({this.cards});

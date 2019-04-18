@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:better_life/workout.dart';
+import 'package:better_life/MIGRATED_workout.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:better_life/database.dart';
+import 'package:better_life/MIGRATED_database.dart';
 import 'package:better_life/workout_data.dart';
 import 'package:better_life/workout_data_point.dart';
 import 'package:better_life/add_new_workout_data_page.dart';
-import 'package:better_life/alert_yes_no.dart';
+import 'package:better_life/MIGRATED_alert_yes_no.dart';
 import 'package:better_life/edit_workout_data_page.dart';
 
 class ViewWorkoutStatisticsPage extends StatefulWidget {

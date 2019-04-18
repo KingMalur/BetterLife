@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:better_life/workout.dart';
-import 'package:better_life/image_helper.dart';
-import 'package:better_life/horizontal_number_picker.dart';
-import 'package:better_life/database.dart';
-import 'package:better_life/alert_yes_no.dart';
+import 'package:better_life/MIGRATED_workout.dart';
+import 'package:better_life/MIGRATED_image_helper.dart';
+import 'package:better_life/MIGRATED_horizontal_number_picker.dart';
+import 'package:better_life/MIGRATED_database.dart';
+import 'package:better_life/MIGRATED_alert_yes_no.dart';
 
 class ModifyWorkoutPage extends StatefulWidget {
   ModifyWorkoutPage({this.workout});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:better_life/add_new_workout_page.dart';
-import 'package:better_life/workout.dart';
-import 'package:better_life/workout_card_list.dart';
-import 'package:better_life/workout_card_grid.dart';
-import 'package:better_life/database.dart';
+import 'package:better_life/MIGRATED_workout.dart';
+import 'package:better_life/MIGRATED_workout_card_list.dart';
+import 'package:better_life/MIGRATED_workout_card_grid.dart';
+import 'package:better_life/MIGRATED_database.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
