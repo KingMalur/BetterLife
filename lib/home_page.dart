@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:better_life/add_new_workout_page.dart';
 import 'package:better_life/workout.dart';
 import 'package:better_life/workout_card_list.dart';
+import 'package:better_life/workout_card_grid.dart';
 import 'package:better_life/database.dart';
 
 class HomePage extends StatefulWidget {
@@ -114,11 +115,16 @@ class _HomePageState extends State<HomePage> {
       _filteredWorkouts = _workouts;
     }
 
+    _filteredWorkouts.sort((a, b) => a.name.compareTo(b.name)); // Sort by name
 
-    WorkoutCardList l = WorkoutCardList(workoutList: _filteredWorkouts,);
-    l.workoutList.sort((a, b) => a.name.compareTo(b.name)); // Sort by name
+    var w;
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+      w = WorkoutCardList(workoutList: _filteredWorkouts,);
+    } else {
+      w = WorkoutCardGrid(workoutList: _filteredWorkouts,);
+    }
 
-    return l;
+    return w;
   }
 
   void _searchPressed() {
