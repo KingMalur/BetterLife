@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: Container(
-          child: new FutureBuilder(//_buildWorkoutCardList(widget._workouts),
+          child: new FutureBuilder(
             future: DatabaseProvider.db.getAllWorkouts(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
