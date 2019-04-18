@@ -20,45 +20,44 @@ class WorkoutCard extends StatefulWidget {
 class _WorkoutCardState extends State<WorkoutCard> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        elevation: 5.0,
-        child: Padding(
-          padding: EdgeInsets.all(5.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              AutoSizeText(
-                widget.workout.name,
-                style: TextStyle(
-                  fontSize: 25.0,
-                ),
-                maxLines: 1,
-                minFontSize: 15.0,
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 5.0,
+      child: Padding(
+        padding: EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            AutoSizeText(
+              widget.workout.name,
+              style: TextStyle(
+                fontSize: 25.0,
               ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  workoutImage,
-                  workoutInformation,
-                ],
-              ),
-            ],
-          ),
+              maxLines: 1,
+              minFontSize: 15.0,
+            ),
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                workoutImage,
+                workoutInformation,
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget get workoutImage {
+    var width = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75;
+
     return Container( // First Object: Image of Workout
-      height: MediaQuery.of(context).size.width / 2.75,
-      width: MediaQuery.of(context).size.width / 2.75,
+      height: width,
+      width: width,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.black26,

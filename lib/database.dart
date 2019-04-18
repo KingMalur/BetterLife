@@ -10,6 +10,8 @@ class DatabaseProvider {
   final String workoutTableName = 'Workout';
   final String workoutDataTableName = 'WorkoutData';
 
+  final String databaseNameTest = 'BetterLifeTest.db';
+
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
 
@@ -32,6 +34,61 @@ class DatabaseProvider {
     }, onOpen: (Database db) async {
       await _createTablesIfExist(db);
     });
+  }
+
+  _createTablesIfExistTEST(Database db) async {
+    await db.execute("DROP TABLE Workout");
+    await db.execute("DROP TABLE WorkoutSection");
+    await db.execute("DROP TABLE WorkoutData");
+    await db.execute("DROP TABLE DataPoint");
+    await db.execute("DROP TABLE Tag");
+
+    await db.execute("CREATE TABLE IF NOT EXISTS Workout ("
+        "workout_uuid TEXT NOT NULL PRIMARY KEY, "
+        "name TEXT NOT NULL, "
+        "imageFilePath TEXT NOT NULL"
+        ")"
+    );
+
+    await db.execute("CREATE TABLE IF NOT EXISTS WorkoutSection ("
+        "workout_section_uuid TEXT NOT NULL PRIMARY KEY, "
+        "workout_uuid TEXT NOT NULL, "
+        "name TEXT NOT NULL, "
+        "minValue INTEGER NOT NULL, "
+        "maxValue INTEGER NOT NULL, "
+            "FOREIGN KEY (workout_uuid) REFERENCES Workout(workout_uuid)"
+        ")"
+    );
+
+    await db.execute("CREATE TABLE IF NOT EXISTS WorkoutData ("
+        "workout_data_uuid TEXT NOT NULL PRIMARY KEY, "
+        "workout_uuid TEXT NOT NULL, "
+        "dateTimeIso8601 TEXT NOT NULL, "
+            "FOREIGN KEY (workout_uuid) REFERENCES Workout(workout_uuid)"
+        ")"
+    );
+
+    await db.execute("CREATE TABLE IF NOT EXISTS DataPoint ("
+        "data_point_uuid TEXT NOT NULL PRIMARY KEY, "
+        "workout_section_uuid TEXT NOT NULL, "
+        "workout_data_uuid TEXT NOT NULL, "
+        "value INTEGER NOT NULL, "
+            "FOREIGN KEY (workout_section_uuid) REFERENCES WorkoutSection(workout_section_uuid),"
+            "FOREIGN KEY (workout_data_uuid) REFERENCES WorkoutData(workout_data_uuid)"
+        ")"
+    );
+
+    await db.execute("CREATE TABLE IF NOT EXISTS Tag ("
+        "tag_uuid TEXT NOT NULL PRIMARY KEY, "
+        "workout_uuid TEXT NOT NULL, "
+        "name TEXT NOT NULL, "
+        "color_a INTEGER NOT NULL, "
+        "color_r INTEGER NOT NULL, "
+        "color_g INTEGER NOT NULL, "
+        "color_b INTEGER NOT NULL, "
+            "FOREIGN KEY (workout_uuid) REFERENCES Workout(workout_uuid),"
+        ")"
+    );
   }
 
   _createTablesIfExist(Database db) async {
