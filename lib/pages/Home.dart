@@ -101,6 +101,7 @@ class _HomeState extends State<Home> {
             child: new IconButton(
               icon: Icon(Icons.add),
               iconSize: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 4 : MediaQuery.of(context).size.height / 4,
+              color: Colors.black45,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     AddWorkout(alreadyPresentCardList: _workouts)));

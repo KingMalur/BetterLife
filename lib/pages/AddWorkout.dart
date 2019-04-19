@@ -6,13 +6,15 @@ import 'package:uuid/uuid.dart';
 import 'package:better_life/widgets/ImageHelper.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
-import 'package:better_life/widgets/WorkoutSectionFormField.dart';
+import 'package:better_life/pages/AddWorkoutSection.dart';
 import 'package:better_life/database/models/WorkoutSection.dart';
 
 class AddWorkout extends StatefulWidget {
   AddWorkout({Key key, this.alreadyPresentCardList}) : super(key: key);
 
   final List<Workout> alreadyPresentCardList;
+
+  final workout_uuid = Uuid().v4();
 
   @override
   _AddWorkoutState createState() => _AddWorkoutState();
@@ -22,7 +24,7 @@ class _AddWorkoutState extends State<AddWorkout> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  List<WorkoutSectionFormField> _workoutSectionFormFieldList = new List<WorkoutSectionFormField>();
+  List<WorkoutSection> _workoutSectionList = new List<WorkoutSection>();
 
   File _image = new File("");
 
@@ -83,21 +85,21 @@ class _AddWorkoutState extends State<AddWorkout> {
           _getWorkoutSectionFormFieldList(),
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _addNewWorkoutSectionFormField,
+            onPressed: () async {
+              var section = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                  AddWorkoutSection(workout_uuid: widget.workout_uuid,)));
+              _workoutSectionList.add(section);
+              setState(() {
+                _workoutSectionList;
+              });
+            },
           ),
           Divider(),
           RaisedButton(
             onPressed: (() async {
               if (_formKey.currentState.validate()) {
-                Workout w = Workout(workoutUuid: Uuid().v4(), tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
+                Workout w = Workout(workoutUuid: widget.workout_uuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
                 bool exists = false;
-
-                for (var e in _workoutSectionFormFieldList) {
-                  e.formKey.currentState.validate();
-                  if (e.nameController.text.isEmpty) {
-                    return;
-                  }
-                }
 
                 for (var e in widget.alreadyPresentCardList) {
                   if (e.name == w.name) {
@@ -128,9 +130,8 @@ class _AddWorkoutState extends State<AddWorkout> {
                 } else {
                   await DatabaseHelper.db.insertWorkout(workout: w);
 
-                  for (var e in _workoutSectionFormFieldList) {
-                    WorkoutSection ws = WorkoutSection(workoutSectionUuid: e.uuid, workoutUuid: w.workoutUuid, name: e.nameController.text);
-                    await DatabaseHelper.db.insertWorkoutSection(workoutSection: ws);
+                  for (var e in _workoutSectionList) {
+                    await DatabaseHelper.db.insertWorkoutSection(workoutSection: e);
                   }
 
                   widget.alreadyPresentCardList.add(w);
@@ -143,13 +144,6 @@ class _AddWorkoutState extends State<AddWorkout> {
       ],
     ),
     );
-  }
-
-  void _addNewWorkoutSectionFormField() {
-    _workoutSectionFormFieldList.add(new WorkoutSectionFormField());
-    setState(() {
-      _workoutSectionFormFieldList; // Repaint Widget
-    });
   }
 
   Widget get workoutImage {
@@ -202,9 +196,36 @@ class _AddWorkoutState extends State<AddWorkout> {
   }
 
   Widget _getWorkoutSectionFormFieldList() {
-    if (_workoutSectionFormFieldList.isNotEmpty) {
+    if (_workoutSectionList.isNotEmpty) {
+      var l = new List<Container>();
+      for (var e in _workoutSectionList) {
+        l.add(Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(e.name),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: null,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: null,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
+      }
+
       return Column(
-        children: _workoutSectionFormFieldList,
+        children: l,
       );
     } else {
       return Container(
