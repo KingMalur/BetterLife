@@ -44,6 +44,8 @@ class DatabaseHelper {
   }
 
   _createTablesIfExist(Database db) async {
+    await deleteWorkouts();
+
     await db.execute("CREATE TABLE IF NOT EXISTS Workout ("
         "workoutUuid TEXT NOT NULL PRIMARY KEY, "
         "tagUuid TEXT, "
@@ -116,7 +118,7 @@ class DatabaseHelper {
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
 // WORKOUT INSERT
-  insertWorkout(Workout workout) async {
+  insertWorkout({Workout workout}) async {
     final db = await database;
 
     var res = await db.insert(workoutTableName, workout.toMap());
@@ -131,7 +133,7 @@ class DatabaseHelper {
     return res.isEmpty ? null : res;
   }
 // WORKOUT UPSERT
-  upsertWorkout(Workout workout) async {
+  upsertWorkout({Workout workout}) async {
     final db = await database;
 
     var count = await db.firstIntValue(await db.query(workoutTableName, where: "workoutUuid = ?", whereArgs: [workout.workoutUuid]));
@@ -150,6 +152,11 @@ class DatabaseHelper {
     final db = await database;
 
     await db.delete(workoutTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
+  }
+  deleteWorkouts() async {
+    final db = await database;
+
+    await db.delete(workoutTableName);
   }
 // WORKOUT END
 
@@ -207,14 +214,14 @@ class DatabaseHelper {
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
 // WORKOUT DATA INSERT
-  insertWorkoutData(WorkoutData workoutData) async {
+  insertWorkoutData({WorkoutData workoutData}) async {
     final db = await database;
 
     var res = await db.insert(workoutDataTableName, workoutData.toMap());
     return res.isEmpty ? null : res;
   }
 // WORKOUT DATA UPDATE
-  updateWorkoutData(WorkoutData workoutData) async {
+  updateWorkoutData({WorkoutData workoutData}) async {
     final db = await database;
 
     var res = await db.update(workoutDataTableName, workoutData.toMap(), where: "workoutDataUuid = ?", whereArgs: [workoutData.workoutDataUuid]);
@@ -222,7 +229,7 @@ class DatabaseHelper {
     return res.isEmpty ? null : res;
   }
 // WORKOUT DATA UPSERT
-  upsertWorkoutData(WorkoutData workoutData) async {
+  upsertWorkoutData({WorkoutData workoutData}) async {
     final db = await database;
 
     var count = await db.firstIntValue(await db.query(workoutDataTableName, where: "workoutDataUuid = ?", whereArgs: [workoutData.workoutDataUuid]));
@@ -280,14 +287,14 @@ class DatabaseHelper {
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
 // WORKOUT SECTION INSERT
-  insertWorkoutSection(WorkoutSection workoutSection) async {
+  insertWorkoutSection({WorkoutSection workoutSection}) async {
     final db = await database;
 
     var res = await db.insert(workoutSectionTableName, workoutSection.toMap());
     return res.isEmpty ? null : res;
   }
 // WORKOUT SECTION UPDATE
-  updateWorkoutSection(WorkoutSection workoutSection) async {
+  updateWorkoutSection({WorkoutSection workoutSection}) async {
     final db = await database;
 
     var res = await db.update(workoutSectionTableName, workoutSection.toMap(), where: "workoutSectionUuid = ?", whereArgs: [workoutSection.workoutSectionUuid]);
@@ -295,7 +302,7 @@ class DatabaseHelper {
     return res.isEmpty ? null : res;
   }
 // WORKOUT SECTION UPSERT
-  upsertWorkoutSelection(WorkoutSection workoutSection) async {
+  upsertWorkoutSelection({WorkoutSection workoutSection}) async {
     final db = await database;
 
     var count = await db.firstIntValue(await db.query(workoutSectionTableName, where: "workoutSectionUuid = ?", whereArgs: [workoutSection.workoutSectionUuid]));
@@ -379,14 +386,14 @@ class DatabaseHelper {
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
 // DATA POINT INSERT
-  insertDataPoint(DataPoint dataPoint) async {
+  insertDataPoint({DataPoint dataPoint}) async {
     final db = await database;
 
     var res = await db.insert(dataPointTableName, dataPoint.toMap());
     return res.isEmpty ? null : res;
   }
 // DATA POINT UPDATE
-  updateDataPoint(DataPoint dataPoint) async {
+  updateDataPoint({DataPoint dataPoint}) async {
     final db = await database;
 
     var res = await db.update(dataPointTableName, dataPoint.toMap(), where: "dataPointUuid = ?", whereArgs: [dataPoint.dataPointUuid]);
@@ -394,7 +401,7 @@ class DatabaseHelper {
     return res.isEmpty ? null : res;
   }
 // DATA POINT UPSERT
-  upsertDataPoint(DataPoint dataPoint) async {
+  upsertDataPoint({DataPoint dataPoint}) async {
     final db = await database;
 
     var count = await db.firstIntValue(await db.query(dataPointTableName, where: "dataPointUuid = ?", whereArgs: [dataPoint.dataPointUuid]));
@@ -439,14 +446,14 @@ class DatabaseHelper {
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
 // TAG INSERT
-  insertTag(Tag tag) async {
+  insertTag({Tag tag}) async {
     final db = await database;
 
     var res = await db.insert(tagTableName, tag.toMap());
     return res.isEmpty ? null : res;
   }
 // TAG UPDATE
-  updateTag(Tag tag) async {
+  updateTag({Tag tag}) async {
     final db = await database;
 
     var res = await db.update(tagTableName, database.toMap(), where: "tagUuid = ?", whereArgs: [tag.tagUuid]);
@@ -454,7 +461,7 @@ class DatabaseHelper {
     return res.isEmpty ? null : res;
   }
 // TAG UPSERT
-  upsertTag(Tag tag) async {
+  upsertTag({Tag tag}) async {
     final db = await database;
 
     var count = await db.firstIntValue(await db.query(tagTableName, where: "tagUuid = ?", whereArgs: [tag.tagUuid]));

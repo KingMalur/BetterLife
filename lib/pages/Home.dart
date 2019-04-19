@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/widgets/CustomGridView.dart';
+import 'package:better_life/pages/AddWorkout.dart';
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -58,7 +60,10 @@ class _HomeState extends State<Home> {
         IconButton(
           icon: Icon(Icons.add),
           tooltip: 'Add new workout',
-          onPressed: null,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                AddWorkout(alreadyPresentCardList: _workouts)));
+          },
         ),
         IconButton(
           icon: Icon(Icons.menu),
@@ -95,8 +100,11 @@ class _HomeState extends State<Home> {
             alignment: Alignment.center,
             child: new IconButton(
               icon: Icon(Icons.add),
-              iconSize: MediaQuery.of(context).size.width / 4,
-              onPressed: null,
+              iconSize: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 4 : MediaQuery.of(context).size.height / 4,
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    AddWorkout(alreadyPresentCardList: _workouts)));
+              },
             ),
           );
         }
