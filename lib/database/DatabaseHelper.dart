@@ -35,17 +35,16 @@ class DatabaseHelper {
   initDatabase() async {
     var documentsInDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsInDirectory.path, databaseName);
-    return await openDatabase(
-        path, version: 1, onCreate: (Database db, int version) async {
+    return await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
       await _createTablesIfExist(db);
-    }, onOpen: (Database db) async {
+    },
+        onOpen: (Database db) async {
       await _createTablesIfExist(db);
     });
   }
 
   _createTablesIfExist(Database db) async {
-    await deleteWorkouts();
-
     await db.execute("CREATE TABLE IF NOT EXISTS Workout ("
         "workoutUuid TEXT NOT NULL PRIMARY KEY, "
         "tagUuid TEXT, "
@@ -122,7 +121,7 @@ class DatabaseHelper {
     final db = await database;
 
     var res = await db.insert(workoutTableName, workout.toMap());
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT UPDATE
   updateWorkout(Workout workout) async {
@@ -130,7 +129,7 @@ class DatabaseHelper {
 
     var res = await db.update(workoutTableName, workout.toMap(), where: "workoutUuid = ?", whereArgs: [workout.workoutUuid]);
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT UPSERT
   upsertWorkout({Workout workout}) async {
@@ -145,7 +144,7 @@ class DatabaseHelper {
       res = await db.update(workoutTableName, workout.toMap(), where: "workoutUuid = ?", whereArgs: [workout.workoutUuid]);
     }
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT DELETE
   deleteWorkout({String workoutUuid}) async {
@@ -218,7 +217,7 @@ class DatabaseHelper {
     final db = await database;
 
     var res = await db.insert(workoutDataTableName, workoutData.toMap());
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT DATA UPDATE
   updateWorkoutData({WorkoutData workoutData}) async {
@@ -226,7 +225,7 @@ class DatabaseHelper {
 
     var res = await db.update(workoutDataTableName, workoutData.toMap(), where: "workoutDataUuid = ?", whereArgs: [workoutData.workoutDataUuid]);
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT DATA UPSERT
   upsertWorkoutData({WorkoutData workoutData}) async {
@@ -241,7 +240,7 @@ class DatabaseHelper {
       res = await db.update(workoutDataTableName, workoutData.toMap(), where: "workoutDataUuid = ?", whereArgs: [workoutData.workoutDataUuid]);
     }
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT DATA DELETE
   deleteWorkoutData({String workoutDataUuid}) async {
@@ -291,7 +290,7 @@ class DatabaseHelper {
     final db = await database;
 
     var res = await db.insert(workoutSectionTableName, workoutSection.toMap());
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT SECTION UPDATE
   updateWorkoutSection({WorkoutSection workoutSection}) async {
@@ -299,7 +298,7 @@ class DatabaseHelper {
 
     var res = await db.update(workoutSectionTableName, workoutSection.toMap(), where: "workoutSectionUuid = ?", whereArgs: [workoutSection.workoutSectionUuid]);
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT SECTION UPSERT
   upsertWorkoutSelection({WorkoutSection workoutSection}) async {
@@ -314,7 +313,7 @@ class DatabaseHelper {
       res = await db.update(workoutSectionTableName, workoutSection.toMap(), where: "workoutSectionUuid = ?", whereArgs: [workoutSection.workoutSectionUuid]);
     }
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // WORKOUT SECTION DELETE
   deleteWorkoutSection({String workoutSectionUuid}) async {
@@ -390,7 +389,7 @@ class DatabaseHelper {
     final db = await database;
 
     var res = await db.insert(dataPointTableName, dataPoint.toMap());
-    return res.isEmpty ? null : res;
+    return res;
   }
 // DATA POINT UPDATE
   updateDataPoint({DataPoint dataPoint}) async {
@@ -398,7 +397,7 @@ class DatabaseHelper {
 
     var res = await db.update(dataPointTableName, dataPoint.toMap(), where: "dataPointUuid = ?", whereArgs: [dataPoint.dataPointUuid]);
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // DATA POINT UPSERT
   upsertDataPoint({DataPoint dataPoint}) async {
@@ -413,7 +412,7 @@ class DatabaseHelper {
       res = await db.update(dataPointTableName, dataPoint.toMap(), where: "dataPointUuid = ?", whereArgs: [dataPoint.dataPointUuid]);
     }
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // DATA POINT DELETE
   deleteDataPoint({String dataPointUuid}) async {
@@ -450,7 +449,7 @@ class DatabaseHelper {
     final db = await database;
 
     var res = await db.insert(tagTableName, tag.toMap());
-    return res.isEmpty ? null : res;
+    return res;
   }
 // TAG UPDATE
   updateTag({Tag tag}) async {
@@ -458,7 +457,7 @@ class DatabaseHelper {
 
     var res = await db.update(tagTableName, database.toMap(), where: "tagUuid = ?", whereArgs: [tag.tagUuid]);
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // TAG UPSERT
   upsertTag({Tag tag}) async {
@@ -473,7 +472,7 @@ class DatabaseHelper {
       res = await db.update(tagTableName, tag.toMap(), where: "tagUuid = ?", whereArgs: [tag.tagUuid]);
     }
 
-    return res.isEmpty ? null : res;
+    return res;
   }
 // TAG DELETE
   deleteTagPoint({String tagUuid}) async {

@@ -60,9 +60,15 @@ class _HomeState extends State<Home> {
         IconButton(
           icon: Icon(Icons.add),
           tooltip: 'Add new workout',
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          onPressed: () async {
+            var workout = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                 AddWorkout(alreadyPresentCardList: _workouts)));
+            if (workout != null) {
+              _workouts.add(workout);
+              setState(() {
+                _workouts;
+              });
+            }
           },
         ),
         IconButton(

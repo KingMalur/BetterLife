@@ -14,7 +14,7 @@ class AddWorkout extends StatefulWidget {
 
   final List<Workout> alreadyPresentCardList;
 
-  final workout_uuid = Uuid().v4();
+  final workoutUuid = Uuid().v4();
 
   @override
   _AddWorkoutState createState() => _AddWorkoutState();
@@ -87,8 +87,10 @@ class _AddWorkoutState extends State<AddWorkout> {
             icon: Icon(Icons.add),
             onPressed: () async {
               var section = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                  AddWorkoutSection(workout_uuid: widget.workout_uuid,)));
-              _workoutSectionList.add(section);
+                  AddWorkoutSection(workoutUuid: widget.workoutUuid, alreadyPresentSectionList: _workoutSectionList,)));
+              if (section != null) {
+                _workoutSectionList.add(section);
+              }
               setState(() {
                 _workoutSectionList;
               });
@@ -97,8 +99,10 @@ class _AddWorkoutState extends State<AddWorkout> {
           Divider(),
           RaisedButton(
             onPressed: (() async {
+              print('onPRESSED');
               if (_formKey.currentState.validate()) {
-                Workout w = Workout(workoutUuid: widget.workout_uuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
+                print('VALIDATING');
+                Workout w = Workout(workoutUuid: widget.workoutUuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
                 bool exists = false;
 
                 for (var e in widget.alreadyPresentCardList) {
@@ -108,6 +112,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                   }
                 }
 
+                print('EXISTS: ' + exists.toString());
                 if (exists) {
                   await showDialog(
                       context: context,
@@ -128,21 +133,23 @@ class _AddWorkoutState extends State<AddWorkout> {
                       }
                   );
                 } else {
-                  await DatabaseHelper.db.insertWorkout(workout: w);
+                  print('BEFORE INSERT');
+                  var res = await DatabaseHelper.db.insertWorkout(workout: w);
+                  print('RES WORKOUT:' + res.toString());
 
                   for (var e in _workoutSectionList) {
                     await DatabaseHelper.db.insertWorkoutSection(workoutSection: e);
+                    print('RES E:' + res.toString());
                   }
 
-                  widget.alreadyPresentCardList.add(w);
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(w);
                 }
               }
             }),
             child: Text('Save Workout'),
           ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 
@@ -211,14 +218,31 @@ class _AddWorkoutState extends State<AddWorkout> {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.edit),
-                    onPressed: null,
+                    onPressed: () async {
+                      var section = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          AddWorkoutSection(workoutUuid: widget.workoutUuid, alreadyPresentSectionList: _workoutSectionList, addSection: false, sectionToEdit: e,)));
+                      if (section != null) {
+                        e = section;
+                      } else {
+                        _workoutSectionList.remove(e);
+                      }
+                      setState(() {
+                        _workoutSectionList;
+                      });
+                    },
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: null,
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _workoutSectionList.remove(e);
+                      setState(() {
+                        _workoutSectionList;
+                      });
+                    },
                   ),
                 ],
-              )
+              ),
+              Divider(),
             ],
           ),
         ));
