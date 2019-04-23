@@ -45,6 +45,8 @@ class DatabaseHelper {
   }
 
   _createTablesIfExist(Database db) async {
+    await db.execute("pragma foreign_keys=ON"); // Needed for "ON DELETE CASCADE"
+
     await db.execute("CREATE TABLE IF NOT EXISTS Workout ("
         "workoutUuid TEXT NOT NULL PRIMARY KEY, "
         "tagUuid TEXT, "
@@ -59,7 +61,7 @@ class DatabaseHelper {
         "name TEXT NOT NULL, "
         "minValue INTEGER NOT NULL, "
         "maxValue INTEGER NOT NULL, "
-        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid)"
+        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid) ON DELETE CASCADE"
         ")"
     );
 
@@ -67,7 +69,7 @@ class DatabaseHelper {
         "workoutDataUuid TEXT NOT NULL PRIMARY KEY, "
         "workoutUuid TEXT NOT NULL, "
         "dateTimeIso8601 TEXT NOT NULL, "
-        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid)"
+        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid) ON DELETE CASCADE"
         ")"
     );
 
@@ -76,8 +78,8 @@ class DatabaseHelper {
         "workoutSectionUuid TEXT NOT NULL, "
         "workoutDataUuid TEXT NOT NULL, "
         "value INTEGER NOT NULL, "
-        "FOREIGN KEY (workoutSectionUuid) REFERENCES WorkoutSection(workoutSectionUuid),"
-        "FOREIGN KEY (workoutDataUuid) REFERENCES WorkoutData(workoutDataUuid)"
+        "FOREIGN KEY (workoutSectionUuid) REFERENCES WorkoutSection(workoutSectionUuid) ON DELETE CASCADE,"
+        "FOREIGN KEY (workoutDataUuid) REFERENCES WorkoutData(workoutDataUuid) ON DELETE CASCADE"
         ")"
     );
 
@@ -88,11 +90,10 @@ class DatabaseHelper {
         "colorA INTEGER NOT NULL, "
         "colorR INTEGER NOT NULL, "
         "colorG INTEGER NOT NULL, "
-        "colorB INTEGER NOT NULL, "
-        "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid)"
+        "colorB INTEGER NOT NULL "
         ")"
     );
-  }
+    }
 
 // --------------------------------------------------------------------------------------------------------------------------------- WORKOUT
 // WORKOUT GET
@@ -100,6 +101,12 @@ class DatabaseHelper {
     final db = await database;
 
     var res = await db.query(workoutTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
+    return res.isEmpty ? null : Workout.fromMap(res.first);
+  }
+  Future<Workout> getWorkoutOfName({String name}) async {
+    final db = await database;
+
+    var res = await db.query(workoutTableName, where: "name = ?", whereArgs: [name]);
     return res.isEmpty ? null : Workout.fromMap(res.first);
   }
 // WORKOUT GET ALL
@@ -124,7 +131,7 @@ class DatabaseHelper {
     return res;
   }
 // WORKOUT UPDATE
-  updateWorkout(Workout workout) async {
+  updateWorkout({Workout workout}) async {
     final db = await database;
 
     var res = await db.update(workoutTableName, workout.toMap(), where: "workoutUuid = ?", whereArgs: [workout.workoutUuid]);
@@ -135,15 +142,14 @@ class DatabaseHelper {
   upsertWorkout({Workout workout}) async {
     final db = await database;
 
-    var count = await db.firstIntValue(await db.query(workoutTableName, where: "workoutUuid = ?", whereArgs: [workout.workoutUuid]));
+    var exists = await getWorkout(workoutUuid: workout.workoutUuid) == null ? false : true;
 
     var res;
-    if (count == 0) {
-      res = await db.insert(workoutTableName, workout.toMap());
-    } else {
+    if (exists) {
       res = await db.update(workoutTableName, workout.toMap(), where: "workoutUuid = ?", whereArgs: [workout.workoutUuid]);
+    } else {
+      res = await db.insert(workoutTableName, workout.toMap());
     }
-
     return res;
   }
 // WORKOUT DELETE
@@ -231,13 +237,13 @@ class DatabaseHelper {
   upsertWorkoutData({WorkoutData workoutData}) async {
     final db = await database;
 
-    var count = await db.firstIntValue(await db.query(workoutDataTableName, where: "workoutDataUuid = ?", whereArgs: [workoutData.workoutDataUuid]));
+    var exists = await getWorkoutData(workoutDataUuid: workoutData.workoutDataUuid) == null ? false : true;
 
     var res;
-    if (count == 0) {
-      res = await db.insert(workoutDataTableName, workoutData.toMap());
-    } else {
+    if (exists) {
       res = await db.update(workoutDataTableName, workoutData.toMap(), where: "workoutDataUuid = ?", whereArgs: [workoutData.workoutDataUuid]);
+    } else {
+      res = await db.insert(workoutDataTableName, workoutData.toMap());
     }
 
     return res;
@@ -247,6 +253,11 @@ class DatabaseHelper {
     final db = await database;
 
     await db.delete(workoutDataTableName, where: "workoutDataUuid = ?", whereArgs: [workoutDataUuid]);
+  }
+  deleteWorkoutDataOfWorkout({String workoutUuid}) async {
+    final db = await database;
+
+    await db.delete(workoutDataTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
   }
 // WORKOUT DATA END
 
@@ -301,16 +312,16 @@ class DatabaseHelper {
     return res;
   }
 // WORKOUT SECTION UPSERT
-  upsertWorkoutSelection({WorkoutSection workoutSection}) async {
+  upsertWorkoutSection({WorkoutSection workoutSection}) async {
     final db = await database;
 
-    var count = await db.firstIntValue(await db.query(workoutSectionTableName, where: "workoutSectionUuid = ?", whereArgs: [workoutSection.workoutSectionUuid]));
+    var exists = await getWorkoutSection(workoutSectionUuid: workoutSection.workoutSectionUuid) == null ? false : true;
 
     var res;
-    if (count == 0) {
-      res = await db.insert(workoutSectionTableName, workoutSection.toMap());
-    } else {
+    if (exists) {
       res = await db.update(workoutSectionTableName, workoutSection.toMap(), where: "workoutSectionUuid = ?", whereArgs: [workoutSection.workoutSectionUuid]);
+    } else {
+      res = await db.insert(workoutSectionTableName, workoutSection.toMap());
     }
 
     return res;
@@ -320,6 +331,11 @@ class DatabaseHelper {
     final db = await database;
 
     await db.delete(workoutSectionTableName, where: "workoutSectionUuid = ?", whereArgs: [workoutSectionUuid]);
+  }
+  deleteWorkoutSectionsOfWorkout({String workoutUuid}) async {
+    final db = await database;
+
+    await db.delete(workoutSectionTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
   }
 // WORKOUT SECTION END
 
@@ -403,13 +419,13 @@ class DatabaseHelper {
   upsertDataPoint({DataPoint dataPoint}) async {
     final db = await database;
 
-    var count = await db.firstIntValue(await db.query(dataPointTableName, where: "dataPointUuid = ?", whereArgs: [dataPoint.dataPointUuid]));
+    var exists = await getDataPoint(dataPointUuid: dataPoint.dataPointUuid) == null ? false : true;
 
     var res;
-    if (count == 0) {
-      res = await db.insert(dataPointTableName, dataPoint.toMap());
-    } else {
+    if (exists) {
       res = await db.update(dataPointTableName, dataPoint.toMap(), where: "dataPointUuid = ?", whereArgs: [dataPoint.dataPointUuid]);
+    } else {
+      res = await db.insert(dataPointTableName, dataPoint.toMap());
     }
 
     return res;
@@ -419,6 +435,21 @@ class DatabaseHelper {
     final db = await database;
 
     await db.delete(dataPointTableName, where: "dataPointUuid = ?", whereArgs: [dataPointUuid]);
+  }
+  deleteDataPointsOfWorkoutSection({String workoutSectionUuid}) async {
+    final db = await database;
+
+    await db.delete(dataPointTableName, where: "workoutSectionUuid = ?", whereArgs: [workoutSectionUuid]);
+  }
+  deleteDataPointsOfWorkoutData({String workoutDataUuid}) async {
+    final db = await database;
+
+    await db.delete(dataPointTableName, where: "workoutDataUuid = ?", whereArgs: [workoutDataUuid]);
+  }
+  deleteDataPointsOfWorkoutSectionAndWorkoutData({String workoutDataUuid, String workoutSectionUuid}) async {
+    final db = await database;
+
+    await db.delete(dataPointTableName, where: "workoutDataUuid = ? AND workoutSectionUuid = ?", whereArgs: [workoutDataUuid, workoutSectionUuid]);
   }
 // DATA POINT END
 
@@ -463,19 +494,19 @@ class DatabaseHelper {
   upsertTag({Tag tag}) async {
     final db = await database;
 
-    var count = await db.firstIntValue(await db.query(tagTableName, where: "tagUuid = ?", whereArgs: [tag.tagUuid]));
+    var exists = await getTag(tagUuid: tag.tagUuid) == null ? false : true;
 
     var res;
-    if (count == 0) {
-      res = await db.insert(tagTableName, tag.toMap());
-    } else {
+    if (exists) {
       res = await db.update(tagTableName, tag.toMap(), where: "tagUuid = ?", whereArgs: [tag.tagUuid]);
+    } else {
+      res = await db.insert(tagTableName, tag.toMap());
     }
 
     return res;
   }
 // TAG DELETE
-  deleteTagPoint({String tagUuid}) async {
+  deleteTag({String tagUuid}) async {
     final db = await database;
 
     await db.delete(tagTableName, where: "tagUuid = ?", whereArgs: [tagUuid]);

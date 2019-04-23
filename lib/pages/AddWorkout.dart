@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:better_life/widgets/ImageHelper.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/pages/AddWorkoutSection.dart';
+import 'package:better_life/pages/EditWorkoutSection.dart';
 import 'package:better_life/database/models/WorkoutSection.dart';
 
 class AddWorkout extends StatefulWidget {
-  AddWorkout({Key key, this.alreadyPresentCardList}) : super(key: key);
+  AddWorkout({this.alreadyPresentCardList});
 
   final List<Workout> alreadyPresentCardList;
 
@@ -80,8 +82,10 @@ class _AddWorkoutState extends State<AddWorkout> {
                 return 'Please enter a name';
               }
             },
+            maxLength: 40,
+            maxLengthEnforced: true,
           ),
-          Divider(),
+          Divider(color: Colors.black45,),
           _getWorkoutSectionFormFieldList(),
           IconButton(
             icon: Icon(Icons.add),
@@ -96,12 +100,10 @@ class _AddWorkoutState extends State<AddWorkout> {
               });
             },
           ),
-          Divider(),
+          Divider(color: Colors.black45,),
           RaisedButton(
             onPressed: (() async {
-              print('onPRESSED');
               if (_formKey.currentState.validate()) {
-                print('VALIDATING');
                 Workout w = Workout(workoutUuid: widget.workoutUuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
                 bool exists = false;
 
@@ -112,7 +114,6 @@ class _AddWorkoutState extends State<AddWorkout> {
                   }
                 }
 
-                print('EXISTS: ' + exists.toString());
                 if (exists) {
                   await showDialog(
                       context: context,
@@ -133,13 +134,10 @@ class _AddWorkoutState extends State<AddWorkout> {
                       }
                   );
                 } else {
-                  print('BEFORE INSERT');
-                  var res = await DatabaseHelper.db.insertWorkout(workout: w);
-                  print('RES WORKOUT:' + res.toString());
+                  await DatabaseHelper.db.insertWorkout(workout: w);
 
                   for (var e in _workoutSectionList) {
                     await DatabaseHelper.db.insertWorkoutSection(workoutSection: e);
-                    print('RES E:' + res.toString());
                   }
 
                   Navigator.of(context).pop(w);
@@ -212,20 +210,24 @@ class _AddWorkoutState extends State<AddWorkout> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(e.name),
+              AutoSizeText(
+                e.name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+                maxLines: 1,
+                minFontSize: 10.0,
+                maxFontSize: 20.0,
+                overflow: TextOverflow.fade,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () async {
-                      var section = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          AddWorkoutSection(workoutUuid: widget.workoutUuid, alreadyPresentSectionList: _workoutSectionList, addSection: false, sectionToEdit: e,)));
-                      if (section != null) {
-                        e = section;
-                      } else {
-                        _workoutSectionList.remove(e);
-                      }
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          EditWorkoutSection(alreadyPresentSectionList: _workoutSectionList, sectionToEdit: e,)));
                       setState(() {
                         _workoutSectionList;
                       });
@@ -242,7 +244,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                   ),
                 ],
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
             ],
           ),
         ));

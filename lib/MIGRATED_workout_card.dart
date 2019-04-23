@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-import 'package:better_life/edit_workout_page.dart';
+import 'package:better_life/MIGRATED_edit_workout_page.dart';
 import 'package:better_life/view_workout_statistics_page.dart';
 import 'package:better_life/add_new_workout_data_page.dart';
 import 'package:better_life/MIGRATED_workout.dart';

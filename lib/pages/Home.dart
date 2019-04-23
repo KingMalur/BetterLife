@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
         IconButton(
           icon: Icon(Icons.menu),
           tooltip: 'Open menu',
-          onPressed: null,
+          onPressed: _menuPressed,
         ),
       ],
       leading: IconButton(
@@ -164,5 +164,9 @@ class _HomeState extends State<Home> {
         _filter.clear();
       }
     });
+  }
+
+  void _menuPressed() {
+    // TODO: Implement drawer
   }
 }

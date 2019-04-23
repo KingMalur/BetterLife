@@ -6,24 +6,33 @@ import 'package:better_life/database/models/WorkoutSection.dart';
 import 'package:better_life/widgets/CustomAlertDialog.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 
-class AddWorkoutSection extends StatefulWidget {
-  AddWorkoutSection({this.workoutUuid, this.alreadyPresentSectionList});
+class EditWorkoutSection extends StatefulWidget {
+  EditWorkoutSection({this.alreadyPresentSectionList, this.sectionToEdit = null});
 
-  final String workoutUuid;
   final List<WorkoutSection> alreadyPresentSectionList;
 
+  final WorkoutSection sectionToEdit;
+
   @override
-  _AddWorkoutSectionState createState() => _AddWorkoutSectionState();
+  _EditWorkoutSectionState createState() => _EditWorkoutSectionState();
 }
 
-class _AddWorkoutSectionState extends State<AddWorkoutSection> {
+class _EditWorkoutSectionState extends State<EditWorkoutSection> {
   final TextEditingController nameController = new TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
-  final String sectionUuid = Uuid().v4();
-  int minValue = 1;
-  int maxValue = 999;
+  int minValue;
+  int maxValue;
+
+  @override
+  void initState() {
+    super.initState();
+
+    minValue = widget.sectionToEdit.minValue;
+    maxValue = widget.sectionToEdit.maxValue;
+    nameController.text = widget.sectionToEdit.name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +44,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
 
   Widget _getAppBar() {
     return AppBar(
-      title: Text('Add Section'),
+      title: Text('Edit Section'),
       backgroundColor: Colors.black45,
     );
   }
@@ -102,20 +111,14 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                   RaisedButton(
                     onPressed: (() async {
                       if (formKey.currentState.validate()) {
-                        WorkoutSection section = WorkoutSection(
-                            name: nameController.text,
-                            workoutSectionUuid: sectionUuid,
-                            minValue: minValue,
-                            maxValue: maxValue,
-                            workoutUuid: widget.workoutUuid
-                        );
-
                         bool exists = false;
 
-                        for (var e in widget.alreadyPresentSectionList) {
-                          if (e.name == section.name) {
-                            exists = true;
-                            break;
+                        if (widget.sectionToEdit.name != nameController.text) {
+                          for (var e in widget.alreadyPresentSectionList) {
+                            if (e.name == nameController.text) {
+                              exists = true;
+                              break;
+                            }
                           }
                         }
 
@@ -126,7 +129,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                                 return new AlertDialog(
                                   elevation: 5.0,
                                   title: Text('Error saving Section'),
-                                  content: Text('A Section of name ' + section.name + ' already exists.'),
+                                  content: Text('A Section of name ' + nameController.text + ' already exists.'),
                                   actions: <Widget>[
                                     FlatButton(
                                       child: Text('Close'),
@@ -139,11 +142,37 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                               }
                           );
                         } else {
-                          Navigator.of(context).pop(section);
+                          //widget.sectionToEdit.workoutUuid; -> Stays the same!
+                          //widget.sectionToEdit.workoutSectionUuid; -> Stays the same!
+                          widget.sectionToEdit.minValue = minValue;
+                          widget.sectionToEdit.maxValue = maxValue;
+                          widget.sectionToEdit.name = nameController.text;
+                          await DatabaseHelper.db.updateWorkoutSection(workoutSection: widget.sectionToEdit);
+                          Navigator.of(context).pop();
                         }
                       }
                     }),
                     child: Text('Save Section'),
+                  ),
+                  VerticalDivider(),
+                  RaisedButton(
+                    onPressed: (() async {
+                      if (formKey.currentState.validate()) {
+                        switch(
+                        await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                        )
+                        {
+                          case AlertReturnDecide.Yes:
+                            await DatabaseHelper.db.deleteWorkoutSection(workoutSectionUuid: widget.sectionToEdit.workoutSectionUuid);
+                            widget.alreadyPresentSectionList.remove(widget.sectionToEdit);
+                            Navigator.of(context).pop();
+                            break;
+                          case AlertReturnDecide.No: // Stay here, do nothing
+                            break;
+                        }
+                      }
+                    }),
+                    child: Text('Delete Section', style: TextStyle(color: Colors.red),),
                   ),
                 ],
               ),

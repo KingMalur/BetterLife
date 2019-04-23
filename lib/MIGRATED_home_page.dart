@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:better_life/add_new_workout_page.dart';
+import 'package:better_life/MIGRATED_add_new_workout_page.dart';
 import 'package:better_life/MIGRATED_workout.dart';
 import 'package:better_life/MIGRATED_workout_card_list.dart';
 import 'package:better_life/MIGRATED_workout_card_grid.dart';
