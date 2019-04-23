@@ -347,6 +347,13 @@ class DatabaseHelper {
     var res = await db.query(dataPointTableName, where: "dataPointUuid = ?", whereArgs: [dataPointUuid]);
     return res.isEmpty ? null : DataPoint.fromMap(res.first);
   }
+  Future<DataPoint> getDataPointOfWorkoutDataAndWorkoutSection({String workoutDataUuid, String workoutSectionUuid}) async {
+    final db = await database;
+
+    var res = await db.query(dataPointTableName, where: "workoutDataUuid = ? AND workoutSectionUuid = ?", whereArgs: [workoutDataUuid, workoutSectionUuid]); // Future<List<Map<String, dynamic>>>
+
+    return res.isEmpty ? null : DataPoint.fromMap(res.first);
+  }
 // DATA POINT GET ALL
   Future<List<DataPoint>> getDataPointList() async {
     final db = await database;

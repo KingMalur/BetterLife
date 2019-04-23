@@ -3,8 +3,6 @@ import 'package:uuid/uuid.dart';
 
 import 'package:better_life/widgets/HorizontalNumberPicker.dart';
 import 'package:better_life/database/models/WorkoutSection.dart';
-import 'package:better_life/widgets/CustomAlertDialog.dart';
-import 'package:better_life/database/DatabaseHelper.dart';
 
 class AddWorkoutSection extends StatefulWidget {
   AddWorkoutSection({this.workoutUuid, this.alreadyPresentSectionList});
@@ -67,7 +65,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                 maxLength: 40,
                 maxLengthEnforced: true,
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
               Text('Minimal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -81,7 +79,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                   },
                 ),
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
               Text('Maximal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -95,7 +93,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                   },
                 ),
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[

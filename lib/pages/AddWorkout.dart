@@ -54,16 +54,16 @@ class _AddWorkoutState extends State<AddWorkout> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            workoutImage,
-            Divider(),
-            workoutForm,
+            _workoutImage,
+            Divider(color: Colors.black45,),
+            _workoutForm,
           ],
         ),
       ),
     );
   }
 
-  Widget get workoutForm {
+  Widget get _workoutForm {
     return Form(
       key: _formKey,
       child: Column(
@@ -151,10 +151,10 @@ class _AddWorkoutState extends State<AddWorkout> {
     );
   }
 
-  Widget get workoutImage {
+  Widget get _workoutImage {
     return Container(
-      height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.0 : MediaQuery.of(context).size.height / 2.0,
-      width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.0 : MediaQuery.of(context).size.height / 2.0,
+      height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75,
+      width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.black26,

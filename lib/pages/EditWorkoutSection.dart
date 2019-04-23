@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:better_life/widgets/HorizontalNumberPicker.dart';
 import 'package:better_life/database/models/WorkoutSection.dart';
@@ -76,7 +75,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                 maxLength: 40,
                 maxLengthEnforced: true,
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
               Text('Minimal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -90,7 +89,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                   },
                 ),
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
               Text('Maximal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -104,7 +103,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                   },
                 ),
               ),
-              Divider(),
+              Divider(color: Colors.black45,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -154,7 +153,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                     }),
                     child: Text('Save Section'),
                   ),
-                  VerticalDivider(),
+                  VerticalDivider(color: Colors.black45,),
                   RaisedButton(
                     onPressed: (() async {
                       if (formKey.currentState.validate()) {
