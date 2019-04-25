@@ -19,7 +19,6 @@ class _ViewStatisticsState extends State<ViewStatistics> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('View Statistics'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -32,7 +31,7 @@ class _ViewStatisticsState extends State<ViewStatistics> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Divider(color: Colors.black45,),
+            Divider(),
           ],
         ),
       ),

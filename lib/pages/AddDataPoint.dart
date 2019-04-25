@@ -19,7 +19,6 @@ class _AddDataPointState extends State<AddDataPoint> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Add Data Point'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -32,7 +31,7 @@ class _AddDataPointState extends State<AddDataPoint> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Divider(color: Colors.black45,),
+            Divider(),
           ],
         ),
       ),

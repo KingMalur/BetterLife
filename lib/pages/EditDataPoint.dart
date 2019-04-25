@@ -19,7 +19,6 @@ class _EditDataPointState extends State<EditDataPoint> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Edit Data Point'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -32,7 +31,7 @@ class _EditDataPointState extends State<EditDataPoint> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Divider(color: Colors.black45,),
+            Divider(),
           ],
         ),
       ),

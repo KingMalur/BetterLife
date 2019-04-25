@@ -19,7 +19,6 @@ class _EditWorkoutDataState extends State<EditWorkoutData> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Edit Workout Data'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -32,7 +31,7 @@ class _EditWorkoutDataState extends State<EditWorkoutData> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Divider(color: Colors.black45,),
+            Divider(),
           ],
         ),
       ),

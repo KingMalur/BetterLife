@@ -19,7 +19,6 @@ class _EditTagState extends State<EditTag> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Edit Tag'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -32,7 +31,7 @@ class _EditTagState extends State<EditTag> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Divider(color: Colors.black45,),
+            Divider(),
           ],
         ),
       ),

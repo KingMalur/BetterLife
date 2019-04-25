@@ -12,7 +12,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/widgets/HorizontalNumberPicker.dart';
 import 'package:better_life/database/models/WorkoutSection.dart';
-import 'package:after_layout/after_layout.dart';
 
 class AddWorkoutData extends StatefulWidget {
   AddWorkoutData({this.workout});
@@ -23,66 +22,53 @@ class AddWorkoutData extends StatefulWidget {
   _AddWorkoutDataState createState() => _AddWorkoutDataState();
 }
 
-class _AddWorkoutDataState extends State<AddWorkoutData> with AfterLayoutMixin<AddWorkoutData> {
+class _AddWorkoutDataState extends State<AddWorkoutData> {
   final String _workoutDataUuid = Uuid().v4();
+
   DateTime _date = DateTime.now();
   final _formKeyDate = GlobalKey<FormState>();
-  Map<String, int> _sections = new Map<String, int>();
-  List<Widget> _sectionWidgetList = new List<Widget>();
+
+  Map<String, int> _sections = new Map<String, int>(); // Key-Value-Storage for Sections and their Value
+  List<WorkoutSection> _sectionList = new List<WorkoutSection>(); // List of Sections to generate Widgets
+  List<Widget> _sectionWidgetList = new List<Widget>(); // List of Widgets of Sections
 
   @override
-  afterFirstLayout(BuildContext context) {
-    DatabaseHelper.db.getWorkoutSectionListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutSection> l){
+  initState() {
+    super.initState();
+
+    DatabaseHelper.db.getWorkoutSectionListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutSection> l)async {
+      if (l == null) {
+        return;
+      }
+
       for (WorkoutSection s in l) {
-        DatabaseHelper.db.getLatestWorkoutData(workoutUuid: s.workoutUuid).then((WorkoutData data){
-          DatabaseHelper.db.getDataPointOfWorkoutDataAndWorkoutSection(workoutDataUuid: data.workoutDataUuid, workoutSectionUuid: s.workoutSectionUuid).then((DataPoint p) {
+        await DatabaseHelper.db.getLatestWorkoutData(workoutUuid: s.workoutUuid).then((WorkoutData data) async {
+          if (data == null) {
+            return;
+          }
+
+          await DatabaseHelper.db.getDataPointOfWorkoutDataAndWorkoutSection(workoutDataUuid: data.workoutDataUuid, workoutSectionUuid: s.workoutSectionUuid).then((DataPoint p) {
             if (p == null) {
               return;
             }
+            print(p.value.toString());
 
             if (!_sections.containsKey(s.workoutSectionUuid)) {
-              _sections[s.workoutSectionUuid] = p.value;
+              _sections[s.workoutSectionUuid] = p.value; // Add Value if exists
             }
 
           });
         });
 
-        _sectionWidgetList.add(Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              AutoSizeText(
-                s.name,
-                style: TextStyle(
-                  fontSize: 25.0,
-                ),
-                maxLines: 1,
-                minFontSize: 15.0,
-              ),
-              HorizontalNumberPicker(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return constraints.isTight
-                        ? Container() : HorizontalSlider(
-                      width: constraints.maxWidth,
-                      value: _sections[s.workoutSectionUuid] == null ? 0 : _sections[s.workoutSectionUuid],
-                      minValue: s.minValue,
-                      maxValue: s.maxValue,
-                      onChanged: (val) => setState(() => _sections[s.workoutSectionUuid] = val),
-                    );
-                  },
-                ),
-              ),
-              Divider(color: Colors.black45,),
-            ],
-          ),
-        ));
-      }
-    });
+        if (!_sections.containsKey(s.workoutSectionUuid)) {
+          _sections[s.workoutSectionUuid] = s.minValue;
+        }
 
-    setState(() {});
+        _sectionList.add(s);
+      }
+
+      setState(() {});
+    });
   }
 
   @override
@@ -96,7 +82,6 @@ class _AddWorkoutDataState extends State<AddWorkoutData> with AfterLayoutMixin<A
   Widget _getAppBar() {
     return AppBar(
       title: Text('Add Workout Data'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -117,11 +102,11 @@ class _AddWorkoutDataState extends State<AddWorkoutData> with AfterLayoutMixin<A
               maxLines: 1,
               minFontSize: 15.0,
             ),
-            Divider(color: Colors.black45,),
+            Divider(),
             _workoutImage,
-            Divider(color: Colors.black45,),
+            Divider(),
             _dateTime,
-            Divider(color: Colors.black45,),
+            Divider(),
             _workoutSections,
             RaisedButton(
               onPressed: (() async {
@@ -166,7 +151,6 @@ class _AddWorkoutDataState extends State<AddWorkoutData> with AfterLayoutMixin<A
       width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.black26,
         borderRadius: BorderRadiusDirectional.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -177,46 +161,14 @@ class _AddWorkoutDataState extends State<AddWorkoutData> with AfterLayoutMixin<A
   }
 
   Widget get _workoutSections {
-    if (_sectionWidgetList.isEmpty) {
-      _sectionWidgetList.add(Container(height: 0.0, width: 0.0,));
-    }
-
-    var col = Column(
-      children: _sectionWidgetList,
-    );
-
-    return col;
-  }
-
-  Widget _getSingleWorkoutSection(WorkoutSection s) {
-    return FutureBuilder(
-      future: DatabaseHelper.db.getLatestWorkoutData(workoutUuid: s.workoutUuid),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        var d = WorkoutData(workoutUuid: "", workoutDataUuid: "", dateTimeIso8601: "");
-        if (snapshot.hasData) {
-          if (snapshot.data != null) {
-            d = snapshot.data;
-          }
-        }
-        return _getDataPointValueForWorkoutSection(s, d);
-      },
-    );
-  }
-
-  Widget _getDataPointValueForWorkoutSection(WorkoutSection s, WorkoutData d) {
-    return FutureBuilder(
-      future: DatabaseHelper.db.getDataPointOfWorkoutDataAndWorkoutSection(workoutDataUuid: d.workoutDataUuid, workoutSectionUuid: s.workoutSectionUuid),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data != null) {
-            if (!_sections.containsKey(s.workoutSectionUuid)) {
-              _sections[s.workoutSectionUuid] = snapshot.data.value;
-            }
-          }
-        }
-
-        return Container(
-          width: MediaQuery.of(context).size.width,
+    if (_sectionList != null) {
+      _sectionWidgetList.clear();
+      _sectionList.forEach((WorkoutSection s) {
+        _sectionWidgetList.add(Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -235,19 +187,32 @@ class _AddWorkoutDataState extends State<AddWorkoutData> with AfterLayoutMixin<A
                     return constraints.isTight
                         ? Container() : HorizontalSlider(
                       width: constraints.maxWidth,
-                      value: _sections[s.workoutSectionUuid] == null ? 0 : _sections[s.workoutSectionUuid],
+                      value: _sections[s.workoutSectionUuid],
                       minValue: s.minValue,
                       maxValue: s.maxValue,
-                      onChanged: (val) => setState(() => _sections[s.workoutSectionUuid] = val),
+                      onChanged: (val) {
+                        _sections[s.workoutSectionUuid] = val;
+                        setState(() {}); // Refresh GUI
+                      },
                     );
                   },
                 ),
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
             ],
           ),
-        );
-      },
+        ));
+      });
+    }
+
+    if (_sectionWidgetList.isEmpty) {
+      _sectionWidgetList.add(Container(height: 0.0, width: 0.0,));
+    }
+
+    var col = Column(
+      children: _sectionWidgetList,
     );
+
+    return col;
   }
 }

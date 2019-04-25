@@ -58,7 +58,7 @@ class _CustomCardState extends State<CustomCard> {
       width: width,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.black26,
+        color: Colors.grey,
         borderRadius: BorderRadiusDirectional.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -83,7 +83,6 @@ class _CustomCardState extends State<CustomCard> {
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.edit,),
-            color: Colors.black45,
             onPressed: (() {
               Navigator.push(context, MaterialPageRoute(builder: (context) =>
                   EditWorkout(workout: widget.workout,)));
@@ -91,12 +90,10 @@ class _CustomCardState extends State<CustomCard> {
           ),
           IconButton(
             icon: Icon(Icons.timeline,),
-            color: Colors.black45,
             onPressed: null,
           ),
           IconButton(
             icon: Icon(Icons.add,),
-            color: Colors.black45,
             onPressed: (() {
               Navigator.push(context, MaterialPageRoute(builder: (context) =>
                   AddWorkoutData(workout: widget.workout,)));

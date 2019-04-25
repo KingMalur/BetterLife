@@ -16,7 +16,7 @@ class HorizontalNumberPicker extends StatelessWidget {
         Container(
           height: 50.0,
           decoration: BoxDecoration(
-            color: Colors.black26,
+            color: Colors.grey,
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: child,

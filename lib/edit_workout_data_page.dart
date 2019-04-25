@@ -8,7 +8,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:better_life/MIGRATED_image_helper.dart';
 import 'package:better_life/MIGRATED_horizontal_number_picker.dart';
 import 'package:better_life/MIGRATED_database.dart';
-import 'package:better_life/workout_data.dart';
+import 'package:better_life/MIGRATED_workout_data.dart';
 import 'package:better_life/MIGRATED_alert_yes_no.dart';
 
 class EditWorkoutDataPage extends StatefulWidget {

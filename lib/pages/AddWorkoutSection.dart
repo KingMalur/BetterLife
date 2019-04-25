@@ -34,7 +34,6 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Add Section'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -65,7 +64,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                 maxLength: 40,
                 maxLengthEnforced: true,
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
               Text('Minimal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -79,7 +78,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                   },
                 ),
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
               Text('Maximal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -93,7 +92,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                   },
                 ),
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -154,27 +153,3 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
     );
   }
 }
-
-/*
-
-
-                  if (_formKey.currentState.validate()) {
-                    Workout w = Workout(nameController.text, setsAmount, repsAmount, weightAmount, useBodyweight, _image == null ? "" : _image.path);
-                    w.uuid = widget.workout.uuid;
-
-                    switch(
-                      await CustomAlertDialog.showYesNoAlert('You will loose this Workout!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
-                    )
-                    {
-                      case AlertReturnDecide.Yes:
-                        await DatabaseProvider.db.deleteWorkout(w, deleteWorkoutDataPoints: true);
-                        await _showDeleteSuccess();
-                        Navigator.of(context).pop();
-                        break;
-                      case AlertReturnDecide.No: // Stay here, do nothing
-                        break;
-                    }
-                  }
-
-
-*/

@@ -5,7 +5,7 @@ enum AlertReturnFull {Yes, No, Cancel}
 enum AlertReturnDecide {Yes, No}
 
 class CustomAlertDialog {
-  static Future<AlertReturnDecide> showYesNoAlert(String title, BuildContext context, {Color yesColor = Colors.black, Color noColor = Colors.black}) async {
+  static Future<AlertReturnDecide> showYesNoAlert(String title, BuildContext context) async {
     switch(
     await showDialog(
         context: context,
@@ -31,7 +31,6 @@ class CustomAlertDialog {
                       'Yes',
                       style: TextStyle(
                         fontSize: 15.0,
-                        color: yesColor,
                       ),
                       maxLines: 1,
                       minFontSize: 10.0,
@@ -44,7 +43,6 @@ class CustomAlertDialog {
                       'No',
                       style: TextStyle(
                         fontSize: 15.0,
-                        color: noColor,
                       ),
                       maxLines: 1,
                       minFontSize: 10.0,
@@ -68,7 +66,7 @@ class CustomAlertDialog {
     }
   }
 
-  static Future<AlertReturnFull> showYesNoCancelAlert(String title, BuildContext context, {Color yesColor = Colors.black, Color noColor = Colors.black, Color cancelColor = Colors.black}) async {
+  static Future<AlertReturnFull> showYesNoCancelAlert(String title, BuildContext context) async {
     switch(
     await showDialog(
         context: context,
@@ -99,7 +97,6 @@ class CustomAlertDialog {
                                 'Yes',
                                 style: TextStyle(
                                   fontSize: 15.0,
-                                  color: yesColor,
                                 ),
                                 maxLines: 1,
                                 minFontSize: 10.0,
@@ -112,7 +109,6 @@ class CustomAlertDialog {
                                 'No',
                                 style: TextStyle(
                                   fontSize: 15.0,
-                                  color: noColor,
                                 ),
                                 maxLines: 1,
                                 minFontSize: 10.0,
@@ -127,7 +123,6 @@ class CustomAlertDialog {
                           'Cancel',
                           style: TextStyle(
                             fontSize: 15.0,
-                            color: cancelColor,
                           ),
                           maxLines: 1,
                           minFontSize: 10.0,

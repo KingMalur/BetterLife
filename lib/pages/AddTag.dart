@@ -19,7 +19,6 @@ class _AddTagState extends State<AddTag> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Add Tag'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -32,7 +31,7 @@ class _AddTagState extends State<AddTag> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Divider(color: Colors.black45,),
+            Divider(),
           ],
         ),
       ),

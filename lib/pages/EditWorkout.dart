@@ -54,7 +54,6 @@ class _EditWorkoutState extends State<EditWorkout> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Add Workout'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -68,7 +67,7 @@ class _EditWorkoutState extends State<EditWorkout> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _workoutImage,
-            Divider(color: Colors.black45,),
+            Divider(),
             _workoutForm,
           ],
         ),
@@ -98,7 +97,7 @@ class _EditWorkoutState extends State<EditWorkout> {
             maxLength: 40,
             maxLengthEnforced: true,
           ),
-          Divider(color: Colors.black45,),
+          Divider(),
           _getWorkoutSectionFormFieldList(),
           IconButton(
             icon: Icon(Icons.add),
@@ -108,12 +107,10 @@ class _EditWorkoutState extends State<EditWorkout> {
               if (section != null) {
                 _workoutSectionList.add(section);
               }
-              setState(() {
-                _workoutSectionList;
-              });
+              setState(() {});
             },
           ),
-          Divider(color: Colors.black45,),
+          Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -164,12 +161,12 @@ class _EditWorkoutState extends State<EditWorkout> {
                 }),
                 child: Text('Save Workout'),
               ),
-              VerticalDivider(color: Colors.black45,),
+              VerticalDivider(),
               RaisedButton(
                 onPressed: (() async {
                   if (_formKey.currentState.validate()) {
                     switch(
-                    await CustomAlertDialog.showYesNoAlert('You will loose this Workout!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                    await CustomAlertDialog.showYesNoAlert('You will loose this Workout!\n\nDo you really want to delete it?', context)
                     )
                     {
                       case AlertReturnDecide.Yes:
@@ -196,7 +193,6 @@ class _EditWorkoutState extends State<EditWorkout> {
       width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.black26,
         borderRadius: BorderRadiusDirectional.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -274,24 +270,29 @@ class _EditWorkoutState extends State<EditWorkout> {
                           EditWorkoutSection(
                             alreadyPresentSectionList: _workoutSectionList,
                             sectionToEdit: w,)));
-                      setState(() {
-                        _workoutSectionList;
-                      });
+                      setState(() {});
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: (() async {
-                      _workoutSectionToDeleteList.add(w.workoutSectionUuid);
-                      _workoutSectionList.remove(w);
-                      setState(() {
-                        _workoutSectionList;
-                      });
+                      switch(
+                      await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context)
+                      )
+                      {
+                        case AlertReturnDecide.Yes:
+                          _workoutSectionToDeleteList.add(w.workoutSectionUuid);
+                          _workoutSectionList.remove(w);
+                          break;
+                        case AlertReturnDecide.No: // Stay here, do nothing
+                          break;
+                      }
+                      setState(() {});
                     }),
                   ),
                 ],
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
             ],
           ),
         ));

@@ -6,7 +6,7 @@ import 'package:better_life/widgets/CustomAlertDialog.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 
 class EditWorkoutSection extends StatefulWidget {
-  EditWorkoutSection({this.alreadyPresentSectionList, this.sectionToEdit = null});
+  EditWorkoutSection({this.alreadyPresentSectionList, this.sectionToEdit});
 
   final List<WorkoutSection> alreadyPresentSectionList;
 
@@ -44,7 +44,6 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Edit Section'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -75,7 +74,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                 maxLength: 40,
                 maxLengthEnforced: true,
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
               Text('Minimal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -89,7 +88,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                   },
                 ),
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
               Text('Maximal Value'),
               HorizontalNumberPicker(
                 child: LayoutBuilder(
@@ -103,7 +102,7 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                   },
                 ),
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -155,12 +154,12 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                     }),
                     child: Text('Save Section'),
                   ),
-                  VerticalDivider(color: Colors.black45,),
+                  VerticalDivider(),
                   RaisedButton(
                     onPressed: (() async {
                       if (formKey.currentState.validate()) {
                         switch(
-                        await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                        await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context)
                         )
                         {
                           case AlertReturnDecide.Yes:
@@ -184,27 +183,3 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
     );
   }
 }
-
-/*
-
-
-                  if (_formKey.currentState.validate()) {
-                    Workout w = Workout(nameController.text, setsAmount, repsAmount, weightAmount, useBodyweight, _image == null ? "" : _image.path);
-                    w.uuid = widget.workout.uuid;
-
-                    switch(
-                      await CustomAlertDialog.showYesNoAlert('You will loose this Workout!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
-                    )
-                    {
-                      case AlertReturnDecide.Yes:
-                        await DatabaseProvider.db.deleteWorkout(w, deleteWorkoutDataPoints: true);
-                        await _showDeleteSuccess();
-                        Navigator.of(context).pop();
-                        break;
-                      case AlertReturnDecide.No: // Stay here, do nothing
-                        break;
-                    }
-                  }
-
-
-*/

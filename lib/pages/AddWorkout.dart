@@ -42,7 +42,6 @@ class _AddWorkoutState extends State<AddWorkout> {
   Widget _getAppBar() {
     return AppBar(
       title: Text('Add Workout'),
-      backgroundColor: Colors.black45,
     );
   }
 
@@ -56,7 +55,7 @@ class _AddWorkoutState extends State<AddWorkout> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _workoutImage,
-            Divider(color: Colors.black45,),
+            Divider(),
             _workoutForm,
           ],
         ),
@@ -86,7 +85,7 @@ class _AddWorkoutState extends State<AddWorkout> {
             maxLength: 40,
             maxLengthEnforced: true,
           ),
-          Divider(color: Colors.black45,),
+          Divider(),
           _getWorkoutSectionFormFieldList(),
           IconButton(
             icon: Icon(Icons.add),
@@ -96,12 +95,10 @@ class _AddWorkoutState extends State<AddWorkout> {
               if (section != null) {
                 _workoutSectionList.add(section);
               }
-              setState(() {
-                _workoutSectionList;
-              });
+              setState(() {});
             },
           ),
-          Divider(color: Colors.black45,),
+          Divider(),
           RaisedButton(
             onPressed: (() async {
               if (_formKey.currentState.validate()) {
@@ -158,7 +155,6 @@ class _AddWorkoutState extends State<AddWorkout> {
       width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.black26,
         borderRadius: BorderRadiusDirectional.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -169,7 +165,6 @@ class _AddWorkoutState extends State<AddWorkout> {
         icon: Icon(Icons.edit),
         tooltip: 'Change the photo',
         alignment: Alignment.bottomRight,
-        color: Colors.white,
         onPressed: getImageFromPickerDialog,
       ),
     );
@@ -229,9 +224,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                     onPressed: () async {
                       await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           EditWorkoutSection(alreadyPresentSectionList: _workoutSectionList, sectionToEdit: section,)));
-                      setState(() {
-                        _workoutSectionList;
-                      });
+                      setState(() {});
                     },
                   ),
                   IconButton(
@@ -239,14 +232,12 @@ class _AddWorkoutState extends State<AddWorkout> {
                     onPressed: (() async {
                       if (_formKey.currentState.validate()) {
                         switch(
-                        await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                        await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context)
                         )
                         {
                           case AlertReturnDecide.Yes:
                             _workoutSectionList.remove(section);
-                            setState(() {
-                              _workoutSectionList;
-                            });
+                            setState(() {});
                             break;
                           case AlertReturnDecide.No: // Stay here, do nothing
                             break;
@@ -256,7 +247,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                   ),
                 ],
               ),
-              Divider(color: Colors.black45,),
+              Divider(),
             ],
           ),
         ));

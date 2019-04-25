@@ -4,6 +4,7 @@ import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/widgets/CustomGridView.dart';
 import 'package:better_life/pages/AddWorkout.dart';
+import 'package:better_life/pages/Settings.dart';
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -55,32 +56,32 @@ class _HomeState extends State<Home> {
   Widget _getAppBar() {
     return AppBar(
       title: _appBarTitle,
-      backgroundColor: Colors.black45,
       actions: <Widget>[
         IconButton(
+          icon: _searchIcon,
+          tooltip: 'Search for Workout',
+          onPressed: _searchPressed,
+        ),
+        IconButton(
           icon: Icon(Icons.add),
-          tooltip: 'Add new workout',
+          tooltip: 'Add new Workout',
           onPressed: () async {
             var workout = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                 AddWorkout(alreadyPresentCardList: _workouts)));
             if (workout != null) {
               _workouts.add(workout);
-              setState(() {
-                _workouts;
-              });
+              setState(() {});
             }
           },
         ),
-        IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: 'Open menu',
-          onPressed: _menuPressed,
-        ),
       ],
       leading: IconButton(
-        icon: _searchIcon,
-        tooltip: 'Search for workout',
-        onPressed: _searchPressed,
+        icon: Icon(Icons.settings),
+        tooltip: 'Open Settings',
+        onPressed: () async {
+          await Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+          setState(() {});
+        },
       ),
     );
   }
@@ -107,7 +108,6 @@ class _HomeState extends State<Home> {
             child: new IconButton(
               icon: Icon(Icons.add),
               iconSize: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 4 : MediaQuery.of(context).size.height / 4,
-              color: Colors.black45,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     AddWorkout(alreadyPresentCardList: _workouts)));
@@ -148,13 +148,9 @@ class _HomeState extends State<Home> {
         _searchIcon = Icon(Icons.close);
         _appBarTitle = TextField(
           controller: _filter,
-          style: TextStyle(
-            color: Colors.white70,
-          ),
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search, color: Colors.white70,),
+            prefixIcon: Icon(Icons.search,),
             hintText: 'Search...',
-            hintStyle: TextStyle(color: Colors.white70,),
           ),
         );
       } else {
@@ -166,7 +162,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void _menuPressed() {
-    // TODO: Implement drawer
+  void _settingPressed() {
+    // TODO: Implement Settings
   }
 }
