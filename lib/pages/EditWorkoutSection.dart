@@ -113,10 +113,12 @@ class _EditWorkoutSectionState extends State<EditWorkoutSection> {
                         bool exists = false;
 
                         if (widget.sectionToEdit.name != nameController.text) {
-                          for (var e in widget.alreadyPresentSectionList) {
-                            if (e.name == nameController.text) {
-                              exists = true;
-                              break;
+                          if (widget.alreadyPresentSectionList != null) {
+                            for (var e in widget.alreadyPresentSectionList) {
+                              if (e.name == nameController.text) {
+                                exists = true;
+                                break;
+                              }
                             }
                           }
                         }

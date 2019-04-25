@@ -25,6 +25,7 @@ class _EditWorkoutState extends State<EditWorkout> {
   final _formKey = GlobalKey<FormState>();
 
   List<WorkoutSection> _workoutSectionList = new List<WorkoutSection>();
+  List<String> _workoutSectionToDeleteList = new List<String>();
 
   File _image;
 
@@ -35,9 +36,10 @@ class _EditWorkoutState extends State<EditWorkout> {
     _image = File(widget.workout.imageFilePath);
     _nameController.text = widget.workout.name;
     DatabaseHelper.db.getWorkoutSectionListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutSection> l) {
-      setState(() {
+      if (l != null) {
         _workoutSectionList = l;
-      });
+      }
+      setState(() {});
     });
   }
 
@@ -104,7 +106,6 @@ class _EditWorkoutState extends State<EditWorkout> {
               var section = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                   AddWorkoutSection(workoutUuid: widget.workout.workoutUuid, alreadyPresentSectionList: _workoutSectionList,)));
               if (section != null) {
-                await DatabaseHelper.db.insertWorkoutSection(workoutSection: section);
                 _workoutSectionList.add(section);
               }
               setState(() {
@@ -151,6 +152,10 @@ class _EditWorkoutState extends State<EditWorkout> {
 
                       for (var e in _workoutSectionList) {
                         await DatabaseHelper.db.upsertWorkoutSection(workoutSection: e);
+                      }
+
+                      for (var e in _workoutSectionToDeleteList) {
+                        await DatabaseHelper.db.deleteWorkoutSection(workoutSectionUuid: e);
                       }
 
                       Navigator.of(context).pop(w);
@@ -236,55 +241,63 @@ class _EditWorkoutState extends State<EditWorkout> {
 
   Widget _getWorkoutSectionFormFieldList() {
     var l = new List<Container>();
-    _workoutSectionList.sort((a, b) => a.name.compareTo(b.name));
-    for (var w in _workoutSectionList) {
-      l.add(Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            AutoSizeText(
-              w.name,
-              style: TextStyle(
-                fontSize: 20.0,
+    if (_workoutSectionList != null) {
+      _workoutSectionList.sort((a, b) => a.name.compareTo(b.name));
+      for (var w in _workoutSectionList) {
+        l.add(Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              AutoSizeText(
+                w.name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+                maxLines: 1,
+                minFontSize: 10.0,
+                maxFontSize: 20.0,
+                overflow: TextOverflow.fade,
               ),
-              maxLines: 1,
-              minFontSize: 10.0,
-              maxFontSize: 20.0,
-              overflow: TextOverflow.fade,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () async {
-                    await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        EditWorkoutSection(alreadyPresentSectionList: _workoutSectionList, sectionToEdit: w,)));
-                    setState(() {
-                      _workoutSectionList;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () async {
-                    _workoutSectionList.remove(w);
-                    await DatabaseHelper.db.deleteWorkoutSection(workoutSectionUuid: w.workoutSectionUuid);
-                    setState(() {
-                      _workoutSectionList;
-                    });
-                  },
-                ),
-              ],
-            ),
-            Divider(color: Colors.black45,),
-          ],
-        ),
-      ));
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () async {
+                      await Navigator.push(
+                          context, MaterialPageRoute(builder: (context) =>
+                          EditWorkoutSection(
+                            alreadyPresentSectionList: _workoutSectionList,
+                            sectionToEdit: w,)));
+                      setState(() {
+                        _workoutSectionList;
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: (() async {
+                      _workoutSectionToDeleteList.add(w.workoutSectionUuid);
+                      _workoutSectionList.remove(w);
+                      setState(() {
+                        _workoutSectionList;
+                      });
+                    }),
+                  ),
+                ],
+              ),
+              Divider(color: Colors.black45,),
+            ],
+          ),
+        ));
+      }
     }
-    if (_workoutSectionList.isNotEmpty) {
+    if (_workoutSectionList != null) {
       return Column(
         children: l,
       );

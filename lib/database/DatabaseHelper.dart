@@ -23,7 +23,7 @@ class DatabaseHelper {
 
   static Database _database;
 
-  get database async {
+  Future<Database> get database async {
     if (_database != null) {
       return _database;
     }
@@ -35,6 +35,7 @@ class DatabaseHelper {
   initDatabase() async {
     var documentsInDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsInDirectory.path, databaseName);
+
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await _createTablesIfExist(db);
@@ -47,46 +48,45 @@ class DatabaseHelper {
   _createTablesIfExist(Database db) async {
     await db.execute("pragma foreign_keys=ON"); // Needed for "ON DELETE CASCADE"
 
-    await db.execute("CREATE TABLE IF NOT EXISTS Workout ("
-        "workoutUuid TEXT NOT NULL PRIMARY KEY, "
-        "tagUuid TEXT, "
-        "name TEXT NOT NULL, "
+    await db.execute("CREATE TABLE IF NOT EXISTS " + workoutTableName + " ("
+        "workoutUuid VARCHAR(36) NOT NULL PRIMARY KEY, "
+        "tagUuid VARCHAR(36), "
+        "name VARCHAR(40) NOT NULL, "
         "imageFilePath TEXT NOT NULL"
         ")"
     );
 
-    await db.execute("CREATE TABLE IF NOT EXISTS WorkoutSection ("
-        "workoutSectionUuid TEXT NOT NULL PRIMARY KEY, "
-        "workoutUuid TEXT NOT NULL, "
-        "name TEXT NOT NULL, "
+    await db.execute("CREATE TABLE IF NOT EXISTS " + workoutSectionTableName + " ("
+        "workoutSectionUuid VARCHAR(36) NOT NULL PRIMARY KEY, "
+        "workoutUuid VARCHAR(36) NOT NULL, "
+        "name VARCHAR(40) NOT NULL, "
         "minValue INTEGER NOT NULL, "
         "maxValue INTEGER NOT NULL, "
         "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid) ON DELETE CASCADE"
         ")"
     );
 
-    await db.execute("CREATE TABLE IF NOT EXISTS WorkoutData ("
-        "workoutDataUuid TEXT NOT NULL PRIMARY KEY, "
-        "workoutUuid TEXT NOT NULL, "
+    await db.execute("CREATE TABLE IF NOT EXISTS " + workoutDataTableName + " ("
+        "workoutDataUuid VARCHAR(36) NOT NULL PRIMARY KEY, "
+        "workoutUuid VARCHAR(36) NOT NULL, "
         "dateTimeIso8601 TEXT NOT NULL, "
         "FOREIGN KEY (workoutUuid) REFERENCES Workout(workoutUuid) ON DELETE CASCADE"
         ")"
     );
 
-    await db.execute("CREATE TABLE IF NOT EXISTS DataPoint ("
-        "dataPointUuid TEXT NOT NULL PRIMARY KEY, "
-        "workoutSectionUuid TEXT NOT NULL, "
-        "workoutDataUuid TEXT NOT NULL, "
+    await db.execute("CREATE TABLE IF NOT EXISTS " + dataPointTableName + " ("
+        "dataPointUuid VARCHAR(36) NOT NULL PRIMARY KEY, "
+        "workoutSectionUuid VARCHAR(36) NOT NULL, "
+        "workoutDataUuid VARCHAR(36) NOT NULL, "
         "value INTEGER NOT NULL, "
         "FOREIGN KEY (workoutSectionUuid) REFERENCES WorkoutSection(workoutSectionUuid) ON DELETE CASCADE,"
         "FOREIGN KEY (workoutDataUuid) REFERENCES WorkoutData(workoutDataUuid) ON DELETE CASCADE"
         ")"
     );
 
-    await db.execute("CREATE TABLE IF NOT EXISTS Tag ("
-        "tagUuid TEXT NOT NULL PRIMARY KEY, "
-        "workoutUuid TEXT NOT NULL, "
-        "name TEXT NOT NULL, "
+    await db.execute("CREATE TABLE IF NOT EXISTS " + tagTableName + " ("
+        "tagUuid VARCHAR(36) NOT NULL PRIMARY KEY, "
+        "name VARCHAR(40) NOT NULL, "
         "colorA INTEGER NOT NULL, "
         "colorR INTEGER NOT NULL, "
         "colorG INTEGER NOT NULL, "
@@ -493,7 +493,7 @@ class DatabaseHelper {
   updateTag({Tag tag}) async {
     final db = await database;
 
-    var res = await db.update(tagTableName, database.toMap(), where: "tagUuid = ?", whereArgs: [tag.tagUuid]);
+    var res = await db.update(tagTableName, tag.toMap(), where: "tagUuid = ?", whereArgs: [tag.tagUuid]);
 
     return res;
   }

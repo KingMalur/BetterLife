@@ -19,7 +19,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
 
   final formKey = GlobalKey<FormState>();
 
-  final String sectionUuid = Uuid().v4();
+  final String sectionUuid = Uuid().v4(); // Generate one time on build and one time only!
   int minValue = 1;
   int maxValue = 999;
 
@@ -110,10 +110,12 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
 
                         bool exists = false;
 
-                        for (var e in widget.alreadyPresentSectionList) {
-                          if (e.name == section.name) {
-                            exists = true;
-                            break;
+                        if (widget.alreadyPresentSectionList != null) {
+                          for (var e in widget.alreadyPresentSectionList) {
+                            if (e.name == section.name) {
+                              exists = true;
+                              break;
+                            }
                           }
                         }
 

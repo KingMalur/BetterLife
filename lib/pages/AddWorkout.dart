@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+import 'package:better_life/widgets/CustomAlertDialog.dart';
 import 'package:better_life/widgets/ImageHelper.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
@@ -16,8 +17,6 @@ class AddWorkout extends StatefulWidget {
 
   final List<Workout> alreadyPresentCardList;
 
-  final workoutUuid = Uuid().v4();
-
   @override
   _AddWorkoutState createState() => _AddWorkoutState();
 }
@@ -25,6 +24,8 @@ class AddWorkout extends StatefulWidget {
 class _AddWorkoutState extends State<AddWorkout> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  final _workoutUuid = Uuid().v4(); // Generate one time and one time only!
 
   List<WorkoutSection> _workoutSectionList = new List<WorkoutSection>();
 
@@ -91,7 +92,7 @@ class _AddWorkoutState extends State<AddWorkout> {
             icon: Icon(Icons.add),
             onPressed: () async {
               var section = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                  AddWorkoutSection(workoutUuid: widget.workoutUuid, alreadyPresentSectionList: _workoutSectionList,)));
+                  AddWorkoutSection(workoutUuid: _workoutUuid, alreadyPresentSectionList: _workoutSectionList,)));
               if (section != null) {
                 _workoutSectionList.add(section);
               }
@@ -104,7 +105,7 @@ class _AddWorkoutState extends State<AddWorkout> {
           RaisedButton(
             onPressed: (() async {
               if (_formKey.currentState.validate()) {
-                Workout w = Workout(workoutUuid: widget.workoutUuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
+                Workout w = Workout(workoutUuid: _workoutUuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
                 bool exists = false;
 
                 for (var e in widget.alreadyPresentCardList) {
@@ -203,7 +204,7 @@ class _AddWorkoutState extends State<AddWorkout> {
   Widget _getWorkoutSectionFormFieldList() {
     if (_workoutSectionList.isNotEmpty) {
       var l = new List<Container>();
-      for (var e in _workoutSectionList) {
+      for (var section in _workoutSectionList) {
         l.add(Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(8.0),
@@ -211,7 +212,7 @@ class _AddWorkoutState extends State<AddWorkout> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               AutoSizeText(
-                e.name,
+                section.name,
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
@@ -227,7 +228,7 @@ class _AddWorkoutState extends State<AddWorkout> {
                     icon: Icon(Icons.edit),
                     onPressed: () async {
                       await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          EditWorkoutSection(alreadyPresentSectionList: _workoutSectionList, sectionToEdit: e,)));
+                          EditWorkoutSection(alreadyPresentSectionList: _workoutSectionList, sectionToEdit: section,)));
                       setState(() {
                         _workoutSectionList;
                       });
@@ -235,12 +236,23 @@ class _AddWorkoutState extends State<AddWorkout> {
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () {
-                      _workoutSectionList.remove(e);
-                      setState(() {
-                        _workoutSectionList;
-                      });
-                    },
+                    onPressed: (() async {
+                      if (_formKey.currentState.validate()) {
+                        switch(
+                        await CustomAlertDialog.showYesNoAlert('You will loose this Section!\n\nDo you really want to delete it?', context, yesColor: Colors.red)
+                        )
+                        {
+                          case AlertReturnDecide.Yes:
+                            _workoutSectionList.remove(section);
+                            setState(() {
+                              _workoutSectionList;
+                            });
+                            break;
+                          case AlertReturnDecide.No: // Stay here, do nothing
+                            break;
+                        }
+                      }
+                    }),
                   ),
                 ],
               ),
