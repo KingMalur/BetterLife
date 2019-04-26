@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class EditWorkoutData extends StatefulWidget {
-  EditWorkoutData();
+  EditWorkoutData({this.dataPointsToEdit});
+
+  final List<String> dataPointsToEdit;
 
   @override
   _EditWorkoutDataState createState() => _EditWorkoutDataState();

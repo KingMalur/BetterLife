@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/pages/EditWorkout.dart';
 import 'package:better_life/pages/AddWorkoutData.dart';
+import 'package:better_life/pages/ViewStatistics.dart';
 
 class CustomCard extends StatefulWidget {
   CustomCard({this.workout});
@@ -90,7 +91,10 @@ class _CustomCardState extends State<CustomCard> {
           ),
           IconButton(
             icon: Icon(Icons.timeline,),
-            onPressed: null,
+            onPressed: (() {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                  ViewStatistics(workout: widget.workout,)));
+            }),
           ),
           IconButton(
             icon: Icon(Icons.add,),

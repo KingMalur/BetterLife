@@ -36,7 +36,7 @@ class _AddWorkoutDataState extends State<AddWorkoutData> {
   initState() {
     super.initState();
 
-    DatabaseHelper.db.getWorkoutSectionListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutSection> l)async {
+    DatabaseHelper.db.getWorkoutSectionListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutSection> l) async {
       if (l == null) {
         return;
       }
@@ -51,7 +51,6 @@ class _AddWorkoutDataState extends State<AddWorkoutData> {
             if (p == null) {
               return;
             }
-            print(p.value.toString());
 
             if (!_sections.containsKey(s.workoutSectionUuid)) {
               _sections[s.workoutSectionUuid] = p.value; // Add Value if exists
@@ -65,6 +64,10 @@ class _AddWorkoutDataState extends State<AddWorkoutData> {
         }
 
         _sectionList.add(s);
+      }
+
+      if (_sectionList != null) {
+        _sectionList.sort((a, b) => a.name.compareTo(b.name));
       }
 
       setState(() {});

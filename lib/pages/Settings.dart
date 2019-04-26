@@ -28,7 +28,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _getAppBar() {
     return AppBar(
-      title: Text('Add Tag'),
+      title: Text('Settings'),
     );
   }
 
@@ -52,7 +52,7 @@ class _SettingsState extends State<Settings> {
             ),
             Divider(),
             ListTile(
-              title: Text('Add & Edit Tags'),
+              title: Text('Add & Edit Tags (NOT IMPLEMENTED)'),
               onTap: (() async {
 
               }),
@@ -64,14 +64,14 @@ class _SettingsState extends State<Settings> {
             ),
             Divider(),
             ListTile(
-              title: Text('About'),
+              title: Text('About (NOT IMPLEMENTED)'),
               onTap: (() async {
 
               }),
             ),
             Divider(),
             ListTile(
-              title: Text('See Licenses'),
+              title: Text('Licenses (NOT IMPLEMENTED)'),
               onTap: (() async {
 
               }),

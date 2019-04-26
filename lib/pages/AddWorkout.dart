@@ -198,6 +198,7 @@ class _AddWorkoutState extends State<AddWorkout> {
 
   Widget _getWorkoutSectionFormFieldList() {
     if (_workoutSectionList.isNotEmpty) {
+      _workoutSectionList.sort((a, b) => a.name.compareTo(b.name));
       var l = new List<Container>();
       for (var section in _workoutSectionList) {
         l.add(Container(

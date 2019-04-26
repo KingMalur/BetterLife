@@ -38,6 +38,7 @@ class _EditWorkoutState extends State<EditWorkout> {
     DatabaseHelper.db.getWorkoutSectionListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutSection> l) {
       if (l != null) {
         _workoutSectionList = l;
+        _workoutSectionList.sort((a, b) => a.name.compareTo(b.name));
       }
       setState(() {});
     });
