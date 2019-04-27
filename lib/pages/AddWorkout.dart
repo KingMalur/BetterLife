@@ -155,6 +155,7 @@ class _AddWorkoutState extends State<AddWorkout> {
       width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width / 2.75 : MediaQuery.of(context).size.height / 2.75,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
+        color: Colors.grey,
         borderRadius: BorderRadiusDirectional.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,

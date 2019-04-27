@@ -12,6 +12,8 @@ class EditWorkoutData extends StatefulWidget {
 class _EditWorkoutDataState extends State<EditWorkoutData> {
   @override
   Widget build(BuildContext context) {
+    widget.dataPointsToEdit.clear();
+
     return Scaffold(
       appBar: _getAppBar(),
       body: _getBody(),

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:better_life/database/models/DataPoint.dart';
 import 'package:better_life/database/models/WorkoutData.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/widgets/models/ChartDataPoint.dart';
-import 'package:better_life/pages/EditWorkoutData.dart';
 
 class WorkoutDiagram extends StatefulWidget {
-  WorkoutDiagram({this.workoutUuid, this.timeSpanInDays});
+  WorkoutDiagram({this.workoutUuid, this.showTimeSpanOptions = true});
 
   final String workoutUuid;
-  int timeSpanInDays;
+  bool showTimeSpanOptions;
 
   @override
   _WorkoutDiagramState createState() => _WorkoutDiagramState();
@@ -19,16 +20,27 @@ class WorkoutDiagram extends StatefulWidget {
 
 class _WorkoutDiagramState extends State<WorkoutDiagram> {
   Map<String, ChartDataPoint> _chartDataPointMap = new Map<String, ChartDataPoint>();
+  Map<String, ChartDataPoint> _chartDataPointMapForDiagram = new Map<String, ChartDataPoint>();
   bool _dataPointsLoaded = false;
+  List<DropdownMenuItem<int>> _timeSpanItems;
+  int _currentTimeSpan;
+  int _timeSpanInDays;
 
   @override
   initState() {
     super.initState();
 
-    DatabaseHelper.db.getWorkoutDataListOfWorkout(workoutUuid: widget.workoutUuid).then((List<WorkoutData> dataList) async {
+    _timeSpanItems = _getTimeSpanItems();
+    _currentTimeSpan = 0;
+    _updateTimeSpan(_currentTimeSpan);
+    _getDataPoints();
+  }
+
+  void _getDataPoints() async {
+    await DatabaseHelper.db.getWorkoutDataListOfWorkout(workoutUuid: widget.workoutUuid).then((List<WorkoutData> dataList) async {
       if (dataList == null) {
         _dataPointsLoaded = true;
-        setState(() {}); // Refresh GUI
+        setState(() {});
         return;
       }
 
@@ -54,7 +66,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
       }
 
       _dataPointsLoaded = true;
-      setState(() {}); // Refresh GUI
+      setState(() {});
     });
   }
 
@@ -65,9 +77,28 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
     if (_chartDataPointMap != null && _chartDataPointMap.isNotEmpty && _dataPointsLoaded) {
       return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2.75,
         padding: EdgeInsets.all(8.0),
-        child: _generateChart(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height / 2.75,
+              child: _generateChart(),
+            ),
+            widget.showTimeSpanOptions ?
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  child: DropdownButton(
+                    onChanged: _updateTimeSpan,
+                    items: _timeSpanItems,
+                    value: _currentTimeSpan,
+                    hint: Text('Select Timespan of Diagram'),
+                  )
+                )
+                : Container(width: 0.0, height: 0.0,),
+          ],
+        ),
       );
     } else {
       if (_dataPointsLoaded) {
@@ -90,11 +121,37 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
     }
   }
 
+  _updateTimeSpan(int selectedTimeSpan) {
+    _currentTimeSpan = selectedTimeSpan;
+
+    int days;
+
+    if (_currentTimeSpan == 0) {
+      // Get days since year one
+      days = DateTime.now().difference(DateTime(0)).inDays;
+    } else {
+      var now = DateTime.now();
+      days = DateTime.now().difference(DateTime(now.year, now.month - _currentTimeSpan, now.day)).inDays;
+    }
+    _timeSpanInDays = days;
+
+    setState(() {});
+  }
+
+  List<DropdownMenuItem<int>> _getTimeSpanItems() {
+    return [
+      new DropdownMenuItem(child: Text('Last 3 Months'), value: 3,),
+      new DropdownMenuItem(child: Text('Last 6 Months'), value: 6,),
+      new DropdownMenuItem(child: Text('Last 12 Months'), value: 12,),
+      new DropdownMenuItem(child: Text('All Time'), value: 0,),
+    ];
+  }
+
   void _excludeDataPoints() {
     if (_chartDataPointMap != null) {
       Map<String, ChartDataPoint> _tmpChartDataPointList = new Map<String, ChartDataPoint>();
 
-      DateTime nDaysAgo = DateTime.now().subtract(Duration(days: widget.timeSpanInDays));
+      DateTime nDaysAgo = DateTime.now().subtract(Duration(days: _timeSpanInDays));
       _chartDataPointMap.forEach((String key, ChartDataPoint value) {
         if (nDaysAgo.compareTo(value.dateTime) <= 0) {
           _tmpChartDataPointList[key] = value;
@@ -102,7 +159,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
       });
 
       if (_tmpChartDataPointList != null) {
-        _chartDataPointMap = _tmpChartDataPointList;
+        _chartDataPointMapForDiagram = _tmpChartDataPointList;
       }
     }
   }
@@ -113,7 +170,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
     return new charts.TimeSeriesChart(
       _dataSeries,
       animate: true,
-      animationDuration: Duration(milliseconds: 200),
+      animationDuration: Duration(milliseconds: 50),
       defaultInteractions: false,
       defaultRenderer: new charts.LineRendererConfig(),
       dateTimeFactory: const charts.LocalDateTimeFactory(),
@@ -135,7 +192,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
 
     Map<String, List<ChartDataPoint>> points = new Map<String, List<ChartDataPoint>>();
 
-    _chartDataPointMap.forEach((String key, ChartDataPoint value) {
+    _chartDataPointMapForDiagram.forEach((String key, ChartDataPoint value) {
       if (!points.containsKey(value.workoutSectionName)) {
         points[value.workoutSectionName] = new List<ChartDataPoint>();
       }
@@ -161,26 +218,47 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
   _onSelectionChanged(charts.SelectionModel model) async {
     if (model.hasDatumSelection) {
       if (model.selectedDatum != null && model.selectedDatum.isNotEmpty) {
-        List<String> dataPointsToEdit = new List<String>();
+
+        String title = "Selected Data Point of\n\n" + DateFormat("EEEE, MMMM d, yyyy 'at' h:mma").format(model.selectedDatum[0].datum.dateTime);
+        Map<String, ChartDataPoint> selectedDataPoints = new Map<String, ChartDataPoint>();
         for (var d in model.selectedDatum) {
-          dataPointsToEdit.add(d.datum.dataPointUuid);
+          selectedDataPoints[d.datum.dataPointUuid] = d.datum;
         }
 
-        List<ChartDataPoint> newPoints = await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            EditWorkoutData(dataPointsToEdit: dataPointsToEdit,)));
-
-        if (newPoints == null || newPoints.isEmpty) {
-          for (var point in dataPointsToEdit) {
-            if (_chartDataPointMap.containsKey(point))
-            _chartDataPointMap.remove(point);
-          }
-        } else {
-          for (var point in newPoints) {
-            _chartDataPointMap[point.dataPointUuid] = point;
-          }
-        }
-
-        setState(() {});
+        await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return new SimpleDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                elevation: 5.0,
+                title: AutoSizeText(
+                  title,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                  maxLines: 4,
+                  minFontSize: 15.0,
+                ),
+                children: <Widget>[
+                  Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: null,
+                      ),
+                      VerticalDivider(),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: null,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }
+        );
       }
     }
   }
