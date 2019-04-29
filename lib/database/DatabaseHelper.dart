@@ -103,6 +103,7 @@ class DatabaseHelper {
     var res = await db.query(workoutTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
     return res.isEmpty ? null : Workout.fromMap(res.first);
   }
+
   Future<Workout> getWorkoutOfName({String name}) async {
     final db = await database;
 
@@ -158,6 +159,7 @@ class DatabaseHelper {
 
     await db.delete(workoutTableName, where: "workoutUuid = ?", whereArgs: [workoutUuid]);
   }
+
   deleteWorkouts() async {
     final db = await database;
 
@@ -173,6 +175,7 @@ class DatabaseHelper {
     var res = await db.query(workoutDataTableName, where: "workoutDataUuid = ?", whereArgs: [workoutDataUuid]);
     return res.isEmpty ? null : WorkoutData.fromMap(res.first);
   }
+
   Future<WorkoutData> getLatestWorkoutData({String workoutUuid}) async {
     final db = await database;
 
@@ -254,6 +257,7 @@ class DatabaseHelper {
 
     await db.delete(workoutDataTableName, where: "workoutDataUuid = ?", whereArgs: [workoutDataUuid]);
   }
+
   deleteWorkoutDataOfWorkout({String workoutUuid}) async {
     final db = await database;
 
@@ -283,6 +287,7 @@ class DatabaseHelper {
 
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
+
   Future<List<WorkoutSection>> getWorkoutSectionListOfWorkout({String workoutUuid}) async {
     final db = await database;
 
@@ -332,6 +337,7 @@ class DatabaseHelper {
 
     await db.delete(workoutSectionTableName, where: "workoutSectionUuid = ?", whereArgs: [workoutSectionUuid]);
   }
+
   deleteWorkoutSectionsOfWorkout({String workoutUuid}) async {
     final db = await database;
 
@@ -347,6 +353,7 @@ class DatabaseHelper {
     var res = await db.query(dataPointTableName, where: "dataPointUuid = ?", whereArgs: [dataPointUuid]);
     return res.isEmpty ? null : DataPoint.fromMap(res.first);
   }
+
   Future<DataPoint> getDataPointOfWorkoutDataAndWorkoutSection({String workoutDataUuid, String workoutSectionUuid}) async {
     final db = await database;
 
@@ -368,6 +375,7 @@ class DatabaseHelper {
 
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
+
   Future<List<DataPoint>> getDataPointListOfWorkoutData({String workoutDataUuid}) async {
     final db = await database;
 
@@ -381,6 +389,7 @@ class DatabaseHelper {
 
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
+
   Future<List<DataPoint>> getDataPointListOfWorkoutSection({String workoutSectionUuid}) async {
     final db = await database;
 
@@ -394,6 +403,7 @@ class DatabaseHelper {
 
     return list.isEmpty ? null : list; // Future<List<Workout>> -> For FutureBuilder
   }
+
   Future<List<DataPoint>> getDataPointListOfWorkoutDataAndWorkoutSection({String workoutDataUuid, String workoutSectionUuid}) async {
     final db = await database;
 
@@ -443,16 +453,19 @@ class DatabaseHelper {
 
     await db.delete(dataPointTableName, where: "dataPointUuid = ?", whereArgs: [dataPointUuid]);
   }
+
   deleteDataPointsOfWorkoutSection({String workoutSectionUuid}) async {
     final db = await database;
 
     await db.delete(dataPointTableName, where: "workoutSectionUuid = ?", whereArgs: [workoutSectionUuid]);
   }
+
   deleteDataPointsOfWorkoutData({String workoutDataUuid}) async {
     final db = await database;
 
     await db.delete(dataPointTableName, where: "workoutDataUuid = ?", whereArgs: [workoutDataUuid]);
   }
+
   deleteDataPointsOfWorkoutSectionAndWorkoutData({String workoutDataUuid, String workoutSectionUuid}) async {
     final db = await database;
 
@@ -520,20 +533,3 @@ class DatabaseHelper {
   }
 // TAG END
 }
-
-/* EXCLUDE OLDER THAN -> TODO: Needs to be implemented somewhere else
-    DateTime nDaysAgo = DateTime.now().subtract(Duration(days: notOlderThanDays.round()));
-    if (excludeOlderThanTimeSpan) {
-      for (var e in listOfWorkoutDataPoints) {
-        if (notOlderThanDays == 0.0) {
-          listOfNonExcludedWorkoutDataPoints.add(e);
-        } else {
-          if (nDaysAgo.compareTo(DateTime.parse(e.dateTimeIso8601)) <= 0) {
-            listOfNonExcludedWorkoutDataPoints.add(e);
-          }
-        }
-      }
-    } else {
-      listOfNonExcludedWorkoutDataPoints = listOfWorkoutDataPoints;
-    }
-*/

@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:better_life/database/models/DataPoint.dart';
 import 'package:better_life/database/models/WorkoutData.dart';
+import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/widgets/models/ChartDataPoint.dart';
 import 'package:better_life/pages/EditWorkoutData.dart';
 
 class WorkoutDiagram extends StatefulWidget {
-  WorkoutDiagram({this.workoutUuid, this.showTimeSpanOptions = true, this.selectableDataPoints = true});
+  WorkoutDiagram({this.workout, this.showTimeSpanOptions = true, this.selectableDataPoints = true});
 
-  final String workoutUuid;
+  final Workout workout;
   bool showTimeSpanOptions;
   bool selectableDataPoints;
 
@@ -39,7 +41,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
   }
 
   void _getDataPoints() async {
-    await DatabaseHelper.db.getWorkoutDataListOfWorkout(workoutUuid: widget.workoutUuid).then((List<WorkoutData> dataList) async {
+    await DatabaseHelper.db.getWorkoutDataListOfWorkout(workoutUuid: widget.workout.workoutUuid).then((List<WorkoutData> dataList) async {
       if (dataList == null) {
         _dataPointsLoaded = true;
         setState(() {});
@@ -225,11 +227,16 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
     if (model.hasDatumSelection) {
       if (model.selectedDatum != null && model.selectedDatum.isNotEmpty) {
 
-        String title = "Selected Data Point of\n\n" + DateFormat("EEEE, MMMM d, yyyy 'at' h:mma").format(model.selectedDatum[0].datum.dateTime);
+        DateTime dateTime = model.selectedDatum[0].datum.dateTime;
+        String title = "Selected Data Point of\n\n" + DateFormat("EEEE, MMMM d, yyyy 'at' h:mma").format(dateTime);
+
+        // Get DataPoints from complete list where dateTime is equal -> Needed because Selection (selectedDatum) not always contains all DataPoints
         Map<String, ChartDataPoint> selectedDataPoints = new Map<String, ChartDataPoint>();
-        for (var d in model.selectedDatum) {
-          selectedDataPoints[d.datum.dataPointUuid] = d.datum;
-        }
+        _chartDataPointMap.forEach((_, ChartDataPoint value) {
+          if (value.dateTime == dateTime) {
+            selectedDataPoints[value.dataPointUuid] = value;
+          }
+        });
 
         await showDialog(
             context: context,
@@ -254,7 +261,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
                         icon: Icon(Icons.edit),
                         onPressed: (() async {
                           await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                              EditWorkoutData(dataPointMap: _chartDataPointMap, dataPointsToEdit: selectedDataPoints)));
+                              EditWorkoutData(workout: widget.workout, dataPointMap: _chartDataPointMap, dataPointsToEdit: selectedDataPoints)));
 
                           Navigator.of(context).pop();
                           setState(() {}); // Redraw GUI
@@ -263,7 +270,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
                       VerticalDivider(),
                       IconButton(
                         icon: Icon(Icons.delete),
-                        onPressed: (() {
+                        onPressed: (() async {
                           selectedDataPoints.forEach((String key, ChartDataPoint point) async {
                             _chartDataPointMap.remove(key);
                             await DatabaseHelper.db.deleteDataPoint(dataPointUuid: key);

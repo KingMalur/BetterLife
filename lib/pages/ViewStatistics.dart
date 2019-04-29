@@ -16,6 +16,8 @@ class ViewStatistics extends StatefulWidget {
 }
 
 class _ViewStatisticsState extends State<ViewStatistics> {
+  WorkoutDiagram _workoutDiagram = WorkoutDiagram();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +69,7 @@ class _ViewStatisticsState extends State<ViewStatistics> {
     {
       case AlertReturnDecide.Yes:
         await DatabaseHelper.db.deleteWorkoutDataOfWorkout(workoutUuid: widget.workout.workoutUuid);
-        setState(() {}); // Rebuild the Widgets
+        Navigator.of(context).pop();
         break;
       case AlertReturnDecide.No: // Stay here, do nothing
         break;
@@ -75,6 +77,7 @@ class _ViewStatisticsState extends State<ViewStatistics> {
   }
 
   Widget get workoutDiagram {
-    return WorkoutDiagram(workoutUuid: widget.workout.workoutUuid, selectableDataPoints: true, showTimeSpanOptions: true,);
+    _workoutDiagram = WorkoutDiagram(workout: widget.workout, selectableDataPoints: true, showTimeSpanOptions: true,);
+    return _workoutDiagram;
   }
 }

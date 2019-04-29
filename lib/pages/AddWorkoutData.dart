@@ -55,7 +55,6 @@ class _AddWorkoutDataState extends State<AddWorkoutData> {
             if (!_sections.containsKey(s.workoutSectionUuid)) {
               _sections[s.workoutSectionUuid] = p.value; // Add Value if exists
             }
-
           });
         });
 
