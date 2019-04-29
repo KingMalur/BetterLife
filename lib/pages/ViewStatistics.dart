@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:better_life/pages/AddWorkoutData.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/widgets/WorkoutDiagram.dart';
 import 'package:better_life/widgets/CustomAlertDialog.dart';
-import 'package:better_life/widgets/models/ChartDataPoint.dart';
 
 class ViewStatistics extends StatefulWidget {
   ViewStatistics({this.workout});
@@ -77,6 +75,6 @@ class _ViewStatisticsState extends State<ViewStatistics> {
   }
 
   Widget get workoutDiagram {
-    return WorkoutDiagram(workoutUuid: widget.workout.workoutUuid,);
+    return WorkoutDiagram(workoutUuid: widget.workout.workoutUuid, selectableDataPoints: true, showTimeSpanOptions: true,);
   }
 }

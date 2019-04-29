@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-class EditWorkoutData extends StatefulWidget {
-  EditWorkoutData({this.dataPointsToEdit});
+import 'package:better_life/widgets/models/ChartDataPoint.dart';
 
-  final List<String> dataPointsToEdit;
+class EditWorkoutData extends StatefulWidget {
+  EditWorkoutData({this.dataPointMap, this.dataPointsToEdit});
+
+  Map<String, ChartDataPoint> dataPointsToEdit;
+  Map<String, ChartDataPoint> dataPointMap;
 
   @override
   _EditWorkoutDataState createState() => _EditWorkoutDataState();
@@ -12,8 +15,6 @@ class EditWorkoutData extends StatefulWidget {
 class _EditWorkoutDataState extends State<EditWorkoutData> {
   @override
   Widget build(BuildContext context) {
-    widget.dataPointsToEdit.clear();
-
     return Scaffold(
       appBar: _getAppBar(),
       body: _getBody(),

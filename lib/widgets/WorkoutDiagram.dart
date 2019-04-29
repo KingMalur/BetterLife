@@ -7,12 +7,14 @@ import 'package:better_life/database/models/DataPoint.dart';
 import 'package:better_life/database/models/WorkoutData.dart';
 import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/widgets/models/ChartDataPoint.dart';
+import 'package:better_life/pages/EditWorkoutData.dart';
 
 class WorkoutDiagram extends StatefulWidget {
-  WorkoutDiagram({this.workoutUuid, this.showTimeSpanOptions = true});
+  WorkoutDiagram({this.workoutUuid, this.showTimeSpanOptions = true, this.selectableDataPoints = true});
 
   final String workoutUuid;
   bool showTimeSpanOptions;
+  bool selectableDataPoints;
 
   @override
   _WorkoutDiagramState createState() => _WorkoutDiagramState();
@@ -170,21 +172,25 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
     return new charts.TimeSeriesChart(
       _dataSeries,
       animate: true,
-      animationDuration: Duration(milliseconds: 50),
+      animationDuration: Duration(milliseconds: 200),
       defaultInteractions: false,
       defaultRenderer: new charts.LineRendererConfig(),
       dateTimeFactory: const charts.LocalDateTimeFactory(),
       selectionModels: [
         new charts.SelectionModelConfig(
           type: charts.SelectionModelType.info,
-          changedListener: _onSelectionChanged,
+          changedListener: widget.selectableDataPoints ? _onSelectionChanged : ((_) => {}), // VOID-Method if not selectable
         ),
       ],
-      behaviors: [
-        new charts.SelectNearest(eventTrigger: charts.SelectionTrigger.tap,),
-        new charts.LinePointHighlighter(selectionModelType: charts.SelectionModelType.info),
-      ],
+      behaviors: _getBehaviours(),
     );
+  }
+
+  List<charts.ChartBehavior> _getBehaviours() {
+    return [
+      new charts.SelectNearest(eventTrigger: charts.SelectionTrigger.tap,),
+      new charts.LinePointHighlighter(selectionModelType: charts.SelectionModelType.info),
+    ];
   }
 
   List<charts.Series<ChartDataPoint, DateTime>> _getChartDataPointsForChart() {
@@ -246,12 +252,25 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.edit),
-                        onPressed: null,
+                        onPressed: (() async {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                              EditWorkoutData(dataPointMap: _chartDataPointMap, dataPointsToEdit: selectedDataPoints)));
+
+                          Navigator.of(context).pop();
+                          setState(() {}); // Redraw GUI
+                        }),
                       ),
                       VerticalDivider(),
                       IconButton(
                         icon: Icon(Icons.delete),
-                        onPressed: null,
+                        onPressed: (() {
+                          selectedDataPoints.forEach((String key, ChartDataPoint point) async {
+                            _chartDataPointMap.remove(key);
+                            await DatabaseHelper.db.deleteDataPoint(dataPointUuid: key);
+                          });
+                          Navigator.of(context).pop();
+                          setState(() {}); // Redraw GUI
+                        }),
                       ),
                     ],
                   ),
