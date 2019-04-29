@@ -5,9 +5,10 @@ import 'package:better_life/database/DatabaseHelper.dart';
 import 'package:better_life/widgets/CustomCard.dart';
 
 class CustomGridView extends StatefulWidget {
-  final List<Workout> list;
+  CustomGridView({this.list, this.cardCallback});
 
-  CustomGridView({this.list});
+  final List<Workout> list;
+  final Function cardCallback;
 
   @override
   _CustomGridViewState createState() => _CustomGridViewState();
@@ -26,14 +27,13 @@ class _CustomGridViewState extends State<CustomGridView> {
         if (index >= widget.list.length) {
           return new Container(
             alignment: Alignment.center,
-            child: new CircularProgressIndicator(), // TODO: Change color
+            child: new CircularProgressIndicator(),
           );
         }
         return FutureBuilder(
           future: DatabaseHelper.db.getTag(tagUuid: widget.list[index].tagUuid),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            // TODO: Add custom Banner to Card
-            return CustomCard(workout: widget.list[index],);
+            return CustomCard(workout: widget.list[index], cardCallback: widget.cardCallback);
           }
         );
       },

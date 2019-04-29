@@ -138,9 +138,29 @@ class _HomeState extends State<Home> {
       _filteredWorkouts = _workouts;
     }
 
-    _filteredWorkouts.sort((a, b) => a.name.compareTo(b.name)); // Sort by name
+    List<Workout> favoriteWorkouts = new List<Workout>();
+    List<Workout> notFavoriteWorkouts = new List<Workout>();
 
-    return CustomGridView(list: _filteredWorkouts,);
+    for (var e in _filteredWorkouts) {
+      if (e.favorite) {
+        favoriteWorkouts.add(e);
+      } else {
+        notFavoriteWorkouts.add(e);
+      }
+    }
+
+    _filteredWorkouts.clear();
+    favoriteWorkouts.sort((a, b) => (a.name.compareTo(b.name)));
+    notFavoriteWorkouts.sort((a, b) => (a.name.compareTo(b.name)));
+
+    for (var e in favoriteWorkouts) {
+      _filteredWorkouts.add(e);
+    }
+    for (var e in notFavoriteWorkouts) {
+      _filteredWorkouts.add(e);
+    }
+
+    return CustomGridView(list: _filteredWorkouts, cardCallback: () => setState(() {}),);
   }
 
   void _searchPressed() {

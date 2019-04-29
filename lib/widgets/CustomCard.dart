@@ -1,22 +1,39 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+
 import 'package:better_life/widgets/ImageHelper.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/pages/EditWorkout.dart';
 import 'package:better_life/pages/AddWorkoutData.dart';
 import 'package:better_life/pages/ViewStatistics.dart';
+import 'package:better_life/database/DatabaseHelper.dart';
 
 class CustomCard extends StatefulWidget {
-  CustomCard({this.workout});
+  CustomCard({this.workout, this.cardCallback});
 
   final Workout workout;
+  final Function cardCallback;
 
   @override
   _CustomCardState createState() => _CustomCardState();
 }
 
 class _CustomCardState extends State<CustomCard> {
+  @override
+  void initState() {
+    super.initState();
+
+    _initState();
+  }
+
+  _initState() async {
+    if (widget.workout.favorite == null) {
+      widget.workout.favorite = false;
+      await DatabaseHelper.db.updateWorkout(workout: widget.workout);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -36,7 +53,6 @@ class _CustomCardState extends State<CustomCard> {
               maxLines: 1,
               minFontSize: 15.0,
             ),
-            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,7 +87,7 @@ class _CustomCardState extends State<CustomCard> {
 
   Widget get workoutInformation {
     return Container( // Second Object: Four Rows of Information (First Row only one Information)
-      height: 175.0,
+      height: 210.0,
       width: 125.0,
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -82,6 +98,16 @@ class _CustomCardState extends State<CustomCard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          IconButton(
+            icon: Icon(widget.workout.favorite ? Icons.favorite : Icons.favorite_border),
+            onPressed: (() async {
+              widget.workout.favorite = !widget.workout.favorite;
+              await DatabaseHelper.db.updateWorkout(workout: widget.workout);
+
+              setState(() {});
+              widget.cardCallback();
+            }),
+          ),
           IconButton(
             icon: Icon(Icons.edit,),
             onPressed: (() {

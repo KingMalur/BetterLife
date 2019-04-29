@@ -12,11 +12,14 @@ import 'package:better_life/widgets/models/ChartDataPoint.dart';
 import 'package:better_life/pages/EditWorkoutData.dart';
 
 class WorkoutDiagram extends StatefulWidget {
-  WorkoutDiagram({this.workout, this.showTimeSpanOptions = true, this.selectableDataPoints = true});
+  WorkoutDiagram({this.workout, this.showTimeSpanOptions = true, this.selectableDataPoints = true, this.width, this.height});
 
   final Workout workout;
   bool showTimeSpanOptions;
   bool selectableDataPoints;
+
+  double width;
+  double height;
 
   @override
   _WorkoutDiagramState createState() => _WorkoutDiagramState();
@@ -87,7 +90,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height / 2.75,
+              height: widget.height,
               child: _generateChart(),
             ),
             widget.showTimeSpanOptions ?
@@ -108,7 +111,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
       if (_dataPointsLoaded) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2.75,
+          height: widget.height,
           padding: EdgeInsets.all(8.0),
           alignment: Alignment.center,
           child: Text('No Workout Data found!'),
@@ -116,7 +119,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
       } else {
         return new Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2.75,
+          height: widget.height,
           padding: EdgeInsets.all(8.0),
           alignment: Alignment.center,
           child: new CircularProgressIndicator(),

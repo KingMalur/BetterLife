@@ -8,27 +8,13 @@
       <change beforePath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_add_new_workout_data_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_add_new_workout_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_alert_yes_no.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_database.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_edit_workout_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_home_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_horizontal_number_picker.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_image_helper.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_main.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_view_workout_statistics_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_workout.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_workout_card.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_workout_card_grid.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_workout_card_list.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_workout_data.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MIGRATED_workout_data_point.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/database/DatabaseHelper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/database/DatabaseHelper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/edit_workout_data_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/AddWorkoutData.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/AddWorkoutData.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/EditWorkoutData.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/EditWorkoutData.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/database/models/Workout.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/database/models/Workout.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/Home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/Home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/Settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/Settings.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/pages/ViewStatistics.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/ViewStatistics.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/CustomCard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/CustomCard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/CustomGridView.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/CustomGridView.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/widgets/WorkoutDiagram.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/WorkoutDiagram.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,7 +27,7 @@
     <session id="-1270434364">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="16" />
+          <entry key="project.closed" value="17" />
           <entry key="project.open.time.148" value="1" />
           <entry key="project.open.time.19" value="1" />
           <entry key="project.open.time.24" value="1" />
@@ -53,17 +39,17 @@
           <entry key="project.open.time.47" value="1" />
           <entry key="project.open.time.48" value="1" />
           <entry key="project.open.time.50" value="1" />
-          <entry key="project.open.time.54" value="2" />
+          <entry key="project.open.time.54" value="3" />
           <entry key="project.open.time.56" value="2" />
           <entry key="project.open.time.57" value="1" />
           <entry key="project.open.time.71" value="1" />
           <entry key="project.open.time.82" value="1" />
-          <entry key="project.opened" value="18" />
+          <entry key="project.opened" value="19" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="dart" value="528" />
+          <entry key="dart" value="557" />
           <entry key="flutter-plugins" value="2" />
           <entry key="gradle" value="2" />
           <entry key="iml" value="1" />
@@ -74,7 +60,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Dart" value="528" />
+          <entry key="Dart" value="557" />
           <entry key="Groovy" value="2" />
           <entry key="IDEA_MODULE" value="1" />
           <entry key="PLAIN_TEXT" value="3" />
@@ -84,14 +70,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dart" value="42179" />
+          <entry key="dart" value="44685" />
           <entry key="xml" value="58" />
           <entry key="yaml" value="160" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Dart" value="42179" />
+          <entry key="Dart" value="44685" />
           <entry key="XML" value="58" />
           <entry key="YAML" value="160" />
         </counts>
@@ -99,7 +85,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -139,6 +125,7 @@
       <find>snetsch</find>
       <find>iso</find>
       <find>getL</find>
+      <find>NOT NULL</find>
     </findStrings>
     <replaceStrings>
       <replace>return res;</replace>
@@ -153,8 +140,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/lib/workout_card_grid.dart" />
-        <option value="$PROJECT_DIR$/lib/workout.dart" />
         <option value="$PROJECT_DIR$/lib/database.dart" />
         <option value="$PROJECT_DIR$/lib/database/Workout.dart" />
         <option value="$PROJECT_DIR$/lib/database/WorkoutSection.dart" />
@@ -171,10 +156,8 @@
         <option value="$PROJECT_DIR$/lib/widgets/WorkoutCard.dart" />
         <option value="$PROJECT_DIR$/lib/widgets/AppBar.dart" />
         <option value="$PROJECT_DIR$/lib/widgets/CustomAppBar.dart" />
-        <option value="$PROJECT_DIR$/lib/widgets/CustomGridView.dart" />
         <option value="$PROJECT_DIR$/lib/widgets/ImageHelper.dart" />
         <option value="$PROJECT_DIR$/lib/database/models/WorkoutSection.dart" />
-        <option value="$PROJECT_DIR$/lib/database/models/Workout.dart" />
         <option value="$PROJECT_DIR$/lib/add_new_workout_data_page.dart" />
         <option value="$PROJECT_DIR$/lib/MIGRATED_database.dart" />
         <option value="$PROJECT_DIR$/lib/widgets/WorkoutSectionFormField.dart" />
@@ -188,8 +171,6 @@
         <option value="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/lib/pages/ViewTags.dart" />
         <option value="$PROJECT_DIR$/lib/widgets/HorizontalNumberPicker.dart" />
-        <option value="$PROJECT_DIR$/lib/pages/Settings.dart" />
-        <option value="$PROJECT_DIR$/lib/widgets/CustomCard.dart" />
         <option value="$PROJECT_DIR$/lib/view_workout_statistics_page.dart" />
         <option value="$PROJECT_DIR$/pubspec.yaml" />
         <option value="$PROJECT_DIR$/lib/widgets/CustomColorSwatch.dart" />
@@ -197,13 +178,19 @@
         <option value="$PROJECT_DIR$/lib/widgets/DataPointValueColumn.dart" />
         <option value="$PROJECT_DIR$/lib/pages/AddWorkout.dart" />
         <option value="$PROJECT_DIR$/lib/pages/EditWorkout.dart" />
-        <option value="$PROJECT_DIR$/lib/pages/Home.dart" />
         <option value="$PROJECT_DIR$/lib/pages/EditDataPoint.dart" />
         <option value="$PROJECT_DIR$/lib/pages/EditWorkoutData.dart" />
-        <option value="$PROJECT_DIR$/lib/database/DatabaseHelper.dart" />
         <option value="$PROJECT_DIR$/lib/pages/AddWorkoutData.dart" />
+        <option value="$PROJECT_DIR$/lib/pages/Licenses.dart" />
+        <option value="$PROJECT_DIR$/lib/pages/About.dart" />
+        <option value="$PROJECT_DIR$/lib/pages/Settings.dart" />
         <option value="$PROJECT_DIR$/lib/widgets/WorkoutDiagram.dart" />
         <option value="$PROJECT_DIR$/lib/pages/ViewStatistics.dart" />
+        <option value="$PROJECT_DIR$/lib/database/models/Workout.dart" />
+        <option value="$PROJECT_DIR$/lib/database/DatabaseHelper.dart" />
+        <option value="$PROJECT_DIR$/lib/widgets/CustomCard.dart" />
+        <option value="$PROJECT_DIR$/lib/widgets/CustomGridView.dart" />
+        <option value="$PROJECT_DIR$/lib/pages/Home.dart" />
       </list>
     </option>
   </component>
@@ -221,6 +208,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -275,7 +263,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -334,7 +321,7 @@
     <frame x="67" y="25" width="1853" height="950" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.24626453" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.24903154" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -385,27 +372,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_workout_card.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="106" column="28" selection-start-line="106" selection-start-column="28" selection-end-line="106" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/database/models/Workout.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="15" column="14" lean-forward="true" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../flutter/packages/flutter/lib/src/widgets/framework.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="3860" column="23" selection-start-line="3860" selection-start-column="23" selection-end-line="3860" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.flutter-plugins">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -421,13 +387,7 @@
         <state relative-caret-position="-367" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_horizontal_number_picker.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="111" column="34" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_horizontal_number_picker.dart" />
     <entry file="file://$PROJECT_DIR$/lib/widgets/WorkoutSectionFormField.dart" />
     <entry file="file://$PROJECT_DIR$/lib/database/models/WorkoutSection.dart">
       <provider selected="true" editor-type-id="text-editor">
@@ -436,38 +396,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_add_new_workout_data_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="46" column="3" selection-start-line="46" selection-start-column="3" selection-end-line="46" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_workout_data.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="14" column="29" lean-forward="true" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_workout_data_point.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_add_new_workout_data_page.dart" />
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_workout_data.dart" />
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_workout_data_point.dart" />
     <entry file="file://$PROJECT_DIR$/../flutter/.pub-cache/hosted/pub.dartlang.org/dynamic_theme-1.0.1/lib/theme_switcher_widgets.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/pages/AddTag.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="20" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -500,24 +435,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/pages/ViewTags.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="3" lean-forward="true" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/widgets/HorizontalNumberPicker.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/widgets/CustomGridView.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" lean-forward="true" selection-end-line="42" />
         </state>
       </provider>
     </entry>
@@ -528,13 +449,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_database.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="110" column="177" selection-start-line="110" selection-start-column="162" selection-end-line="110" selection-end-column="177" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_database.dart" />
     <entry file="file://$PROJECT_DIR$/pubspec.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -564,13 +479,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/pages/Settings.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="54" column="63" lean-forward="true" selection-start-line="54" selection-start-column="63" selection-end-line="54" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/database/models/DataPoint.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -593,37 +501,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/widgets/DataPointValueColumn.dart" />
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_view_workout_statistics_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/pages/AddWorkout.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="157" column="27" selection-start-line="157" selection-start-column="27" selection-end-line="157" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/pages/Home.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="148" column="40" lean-forward="true" selection-start-line="148" selection-start-column="40" selection-end-line="148" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_edit_workout_data_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
-          <caret line="127" column="32" lean-forward="true" selection-start-line="127" selection-start-column="32" selection-end-line="127" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_view_workout_statistics_page.dart" />
+    <entry file="file://$PROJECT_DIR$/lib/MIGRATED_edit_workout_data_page.dart" />
     <entry file="file://$PROJECT_DIR$/android/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -652,13 +531,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/widgets/CustomCard.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="93" column="28" lean-forward="true" selection-start-line="93" selection-start-column="28" selection-end-line="95" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/pages/AddDataPoint.dart" />
     <entry file="file://$PROJECT_DIR$/lib/pages/EditWorkoutData.dart">
       <provider selected="true" editor-type-id="text-editor">
@@ -680,16 +552,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/database/DatabaseHelper.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="178" column="22" selection-start-line="178" selection-start-column="22" selection-end-line="178" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/pages/AddWorkoutData.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
@@ -700,10 +562,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/AddTag.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="10" column="11" lean-forward="true" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/Licenses.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="23" lean-forward="true" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/About.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/ViewTags.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/Settings.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="58" column="28" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/pages/ViewStatistics.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="58" column="12" lean-forward="true" selection-start-line="58" selection-start-column="12" selection-end-line="58" selection-end-column="12" />
+        <state relative-caret-position="417">
+          <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
@@ -712,11 +612,68 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/widgets/WorkoutDiagram.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="60" column="25" selection-start-line="60" selection-start-column="25" selection-end-line="60" selection-end-column="25" />
+        <state relative-caret-position="375">
+          <caret line="121" column="32" selection-start-line="121" selection-start-column="32" selection-end-line="121" selection-end-column="32" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/database/models/WorkoutData.dart">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/database/models/Workout.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="41" selection-start-line="41" selection-end-line="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/AddWorkout.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="157" column="27" selection-start-line="157" selection-start-column="27" selection-end-line="157" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/database/DatabaseHelper.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="56" column="11" selection-start-line="56" selection-start-column="11" selection-end-line="56" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/widgets/CustomCard.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1542">
+          <caret line="106" column="30" lean-forward="true" selection-start-line="106" selection-start-column="30" selection-end-line="106" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/widgets/CustomGridView.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="35" column="92" selection-start-line="35" selection-start-column="92" selection-end-line="35" selection-end-column="92" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/pages/Home.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="162" column="89" lean-forward="true" selection-start-line="162" selection-start-column="89" selection-end-line="162" selection-end-column="89" />
         </state>
       </provider>
     </entry>

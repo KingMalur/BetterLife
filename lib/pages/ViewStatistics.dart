@@ -77,7 +77,7 @@ class _ViewStatisticsState extends State<ViewStatistics> {
   }
 
   Widget get workoutDiagram {
-    _workoutDiagram = WorkoutDiagram(workout: widget.workout, selectableDataPoints: true, showTimeSpanOptions: true,);
+    _workoutDiagram = WorkoutDiagram(workout: widget.workout, selectableDataPoints: true, showTimeSpanOptions: true, height: MediaQuery.of(context).size.height / 2.75, width: MediaQuery.of(context).size.height,);
     return _workoutDiagram;
   }
 }

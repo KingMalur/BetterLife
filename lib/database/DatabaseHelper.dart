@@ -52,7 +52,8 @@ class DatabaseHelper {
         "workoutUuid VARCHAR(36) NOT NULL PRIMARY KEY, "
         "tagUuid VARCHAR(36), "
         "name VARCHAR(40) NOT NULL, "
-        "imageFilePath TEXT NOT NULL"
+        "imageFilePath TEXT NOT NULL, "
+        "favorite INTEGER DEFAULT 0 NOT NULL"
         ")"
     );
 
