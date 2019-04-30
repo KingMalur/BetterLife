@@ -102,7 +102,7 @@ class _AddWorkoutState extends State<AddWorkout> {
           RaisedButton(
             onPressed: (() async {
               if (_formKey.currentState.validate()) {
-                Workout w = Workout(workoutUuid: _workoutUuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path);
+                Workout w = Workout(workoutUuid: _workoutUuid, tagUuid: "", name: _nameController.text,imageFilePath: _image == null ? "" : _image.path, favorite: false);
                 bool exists = false;
 
                 for (var e in widget.alreadyPresentCardList) {

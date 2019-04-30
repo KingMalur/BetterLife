@@ -37,8 +37,8 @@ class _EditWorkoutDataState extends State<EditWorkoutData> {
     _initSections();
   }
 
-  _initSections() async {
-    await widget.dataPointsToEdit.forEach((String key, ChartDataPoint value) async {
+  _initSections() {
+    widget.dataPointsToEdit.forEach((String key, ChartDataPoint value) async {
       _date = value.dateTime;
       var section = await DatabaseHelper.db.getWorkoutSection(workoutSectionUuid: value.workoutSectionUuid);
       if (section != null) {
@@ -151,6 +151,7 @@ class _EditWorkoutDataState extends State<EditWorkoutData> {
   Widget get _workoutSections {
     if (_sectionList != null) {
       _sectionWidgetList.clear();
+      _sectionList.sort((a, b) => a.name.compareTo(b.name));
       _sectionList.forEach((WorkoutSection s) {
         _sectionWidgetList.add(Container(
           width: MediaQuery

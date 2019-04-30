@@ -118,7 +118,7 @@ class _EditWorkoutState extends State<EditWorkout> {
               RaisedButton(
                 onPressed: (() async {
                   if (_formKey.currentState.validate()) {
-                    Workout w = Workout(workoutUuid: widget.workout.workoutUuid, tagUuid: "", name: _nameController.text, imageFilePath: _image == null ? "" : _image.path);
+                    Workout w = Workout(workoutUuid: widget.workout.workoutUuid, tagUuid: "", name: _nameController.text, imageFilePath: _image == null ? "" : _image.path, favorite: widget.workout.favorite);
 
                     var exists = false;
 

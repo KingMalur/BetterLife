@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 Workout workoutFromJson(String str) {
   final jsonData = json.decode(str);
@@ -17,7 +18,12 @@ class Workout {
   String imageFilePath;
   bool favorite;
 
-  Workout({this.workoutUuid, this.tagUuid, this.name, this.imageFilePath, this.favorite = false});
+  Workout({
+    @required this.workoutUuid,
+    @required this.tagUuid,
+    @required this.name,
+    @required this.imageFilePath,
+    @required this.favorite});
 
   factory Workout.fromMap(Map<String, dynamic> json) {
 

@@ -182,8 +182,4 @@ class _HomeState extends State<Home> {
       }
     });
   }
-
-  void _settingPressed() {
-    // TODO: Implement Settings
-  }
 }

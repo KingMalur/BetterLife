@@ -32,6 +32,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
   List<DropdownMenuItem<int>> _timeSpanItems;
   int _currentTimeSpan;
   int _timeSpanInDays;
+  int _sectionCount = 0;
 
   @override
   initState() {
@@ -72,6 +73,16 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
         });
       }
 
+      List<String> sections = new List<String>();
+      _chartDataPointMap.forEach((String key, ChartDataPoint value) {
+        if (!sections.contains(value.workoutSectionUuid)) {
+          sections.add(value.workoutSectionUuid);
+        }
+      });
+      if (sections != null && sections.isNotEmpty) {
+        _sectionCount = sections.length;
+      }
+
       _dataPointsLoaded = true;
       setState(() {});
     });
@@ -81,16 +92,17 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
   Widget build(BuildContext context) {
     _excludeDataPoints();
 
+    int addToHeight = MediaQuery.of(context).orientation == Orientation.portrait ? (_sectionCount == null ? 0 : _sectionCount) * 35 : (_sectionCount == null ? 0 : _sectionCount) * 20;
+
     if (_chartDataPointMap != null && _chartDataPointMap.isNotEmpty && _dataPointsLoaded) {
       return Container(
-        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: widget.height,
+              height: widget.height + addToHeight,
               child: _generateChart(),
             ),
             widget.showTimeSpanOptions ?
@@ -100,7 +112,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
                     onChanged: _updateTimeSpan,
                     items: _timeSpanItems,
                     value: _currentTimeSpan,
-                    hint: Text('Select Timespan of Diagram'),
+                    hint: Text('Select Timespan'),
                   )
                 )
                 : Container(width: 0.0, height: 0.0,),
@@ -193,8 +205,17 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
 
   List<charts.ChartBehavior> _getBehaviours() {
     return [
-      new charts.SelectNearest(eventTrigger: charts.SelectionTrigger.tap,),
-      new charts.LinePointHighlighter(selectionModelType: charts.SelectionModelType.info),
+      new charts.SelectNearest(
+        eventTrigger: charts.SelectionTrigger.tap,
+      ),
+      new charts.LinePointHighlighter(
+        selectionModelType: charts.SelectionModelType.info,
+      ),
+      new charts.SeriesLegend(
+        position: MediaQuery.of(context).orientation == Orientation.portrait ? charts.BehaviorPosition.bottom : charts.BehaviorPosition.end,
+        outsideJustification: charts.OutsideJustification.startDrawArea,
+        horizontalFirst: false,
+      ),
     ];
   }
 
