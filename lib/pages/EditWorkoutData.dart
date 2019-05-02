@@ -10,13 +10,16 @@ import 'package:better_life/database/models/WorkoutSection.dart';
 import 'package:better_life/database/models/Workout.dart';
 import 'package:better_life/widgets/ImageHelper.dart';
 import 'package:better_life/widgets/HorizontalNumberPicker.dart';
+import 'package:better_life/database/models/DataPoint.dart';
+import 'package:better_life/database/models/WorkoutData.dart';
 
 class EditWorkoutData extends StatefulWidget {
-  EditWorkoutData({this.workout, this.dataPointMap, this.dataPointsToEdit});
+  EditWorkoutData({this.workout, this.workoutDataUuid, this.dataPointMap, this.dataPointsToEdit});
 
   final Workout workout;
   final Map<String, ChartDataPoint> dataPointsToEdit;
   final Map<String, ChartDataPoint> dataPointMap;
+  final String workoutDataUuid;
 
   @override
   _EditWorkoutDataState createState() => _EditWorkoutDataState();
@@ -96,6 +99,42 @@ class _EditWorkoutDataState extends State<EditWorkoutData> {
               children: <Widget>[
                 RaisedButton(
                   onPressed: (() async {
+                    await widget.dataPointsToEdit.forEach((String key, ChartDataPoint value) async {
+                      if (_sections.containsKey(value.workoutSectionUuid)) {
+                        ChartDataPoint p = ChartDataPoint(
+                          workoutDataUuid: value.workoutDataUuid,
+                          workoutSectionUuid: value.workoutSectionUuid,
+                          dataPointUuid: value.dataPointUuid,
+                          value: _sections[value.workoutSectionUuid],
+                          dateTime: _date,
+                          workoutSectionName: value.workoutSectionName,
+                        );
+
+                        widget.dataPointsToEdit[key] = p;
+
+                        DataPoint d = DataPoint(
+                          dataPointUuid: p.dataPointUuid,
+                          value: p.value,
+                          workoutSectionUuid: p.workoutSectionUuid,
+                          workoutDataUuid: p.workoutDataUuid,
+                        );
+
+                        await DatabaseHelper.db.updateDataPoint(dataPoint: d);
+                      }
+                    });
+
+                    await widget.dataPointsToEdit.forEach((String key, ChartDataPoint value) async {
+                      widget.dataPointMap[key] = value;
+                    });
+
+                    WorkoutData w = WorkoutData(
+                      workoutDataUuid: widget.workoutDataUuid,
+                      workoutUuid: widget.workout.workoutUuid,
+                      dateTimeIso8601: _date.toIso8601String(),
+                    );
+
+                    await DatabaseHelper.db.updateWorkoutData(workoutData: w);
+
                     Navigator.of(context).pop();
                   }),
                   child: Text('Save Workout Data'),
@@ -103,6 +142,12 @@ class _EditWorkoutDataState extends State<EditWorkoutData> {
                 VerticalDivider(),
                 RaisedButton(
                   onPressed: (() async {
+                    await DatabaseHelper.db.deleteWorkoutData(workoutDataUuid: widget.workoutDataUuid);
+                    widget.dataPointsToEdit.forEach((String key, ChartDataPoint value) {
+                      if (widget.dataPointMap.containsKey(key)) {
+                        widget.dataPointMap.remove(key);
+                      }
+                    });
                     Navigator.of(context).pop();
                   }),
                   child: Text('Delete Workout Data', style: TextStyle(color: Colors.red),),

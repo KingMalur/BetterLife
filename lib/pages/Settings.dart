@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:better_life/pages/About.dart';
 import 'package:better_life/pages/Licenses.dart';
-import 'package:better_life/pages/ViewTags.dart';
 
 class Settings extends StatefulWidget {
   Settings();
@@ -52,14 +51,6 @@ class _SettingsState extends State<Settings> {
                 _darkThemeActive = value;
                 DynamicTheme.of(context).setBrightness(_darkThemeActive ? Brightness.dark : Brightness.light);
                 setState(() {});
-              }),
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Tags'),
-              onTap: (() async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                    ViewTags()));
               }),
             ),
             Divider(),

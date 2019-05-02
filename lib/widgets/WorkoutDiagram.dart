@@ -256,9 +256,11 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
 
         // Get DataPoints from complete list where dateTime is equal -> Needed because Selection (selectedDatum) not always contains all DataPoints
         Map<String, ChartDataPoint> selectedDataPoints = new Map<String, ChartDataPoint>();
+        String workoutDataUuid = "";
         _chartDataPointMap.forEach((_, ChartDataPoint value) {
           if (value.dateTime == dateTime) {
             selectedDataPoints[value.dataPointUuid] = value;
+            workoutDataUuid = value.workoutDataUuid;
           }
         });
 
@@ -285,7 +287,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
                         icon: Icon(Icons.edit),
                         onPressed: (() async {
                           await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                              EditWorkoutData(workout: widget.workout, dataPointMap: _chartDataPointMap, dataPointsToEdit: selectedDataPoints)));
+                              EditWorkoutData(workout: widget.workout, workoutDataUuid: workoutDataUuid, dataPointMap: _chartDataPointMap, dataPointsToEdit: selectedDataPoints)));
 
                           Navigator.of(context).pop();
                           setState(() {}); // Redraw GUI
@@ -299,6 +301,7 @@ class _WorkoutDiagramState extends State<WorkoutDiagram> {
                             _chartDataPointMap.remove(key);
                             await DatabaseHelper.db.deleteDataPoint(dataPointUuid: key);
                           });
+                          await DatabaseHelper.db.deleteWorkoutData(workoutDataUuid: workoutDataUuid);
                           Navigator.of(context).pop();
                           setState(() {}); // Redraw GUI
                         }),
