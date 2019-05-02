@@ -9,7 +9,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="BetterLife"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/better_life">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
